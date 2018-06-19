@@ -9,13 +9,6 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import os
 import json
 
-# trying to pass stuff from login to register when user not in DB
-
-
-def func(request):
-    return request
-
-
 app = Flask(__name__, static_folder="../static", template_folder="../static")
 app.config['MONGO_DBNAME'] = "lunchbox"
 app.config['MONGO_URI'] = "mongodb://slackers:bigwilli3@ds263460.mlab.com:63460/lunchbox"
@@ -74,82 +67,27 @@ def register():
 
         else:
             return 'Username has already been taken'
-    if request.args:
-        return render_template('registration.html', email=request.args['email'], password=request.args['password'])
-    else:
-        return render_template('registration.html')
+
+    return render_template('create-profile.html')
 
 
 # sets up the page for registration
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        print('request.form[\'submitButton\']:{}'.format(
-            request.form['submitButton']))
+        email = request.form['email']
+        password = request.form['password']
 
-        # LOGIN
-        if request.form['submitButton'] == 'loginButton':
-            print('LoginButton')
-            email = request.form['email']
-            password = request.form['password']
-
-            requested_user = mongo.db.users.find_one({'email': email})
-            if requested_user:
-                if check_password_hash(requested_user["password"], password):
-                    login_user(requested_user)
-                    return redirect(url_for('home'))
-                else:
-                    return 'Incorrect password.'
+        requested_user = mongo.db.users.find_one({'email': email})
+        if requested_user:
+            if check_password_hash(requested_user["password"], password):
+                login_user(requested_user)
+                return redirect(url_for('home'))
             else:
-                # return redirect(url_for('register', email=request.form['email'], password=request.form['password']))
-                return 'Incorrect email.'
-        
-        # SIGN UP
-        elif request.form['submitButton'] == 'signupButton':
-            print('SignupButton')
-
-            # get form data
-            email = request.form['email']
-            password = request.form['password']
-
-            requested_user = mongo.db.users.find_one({'email': email})
-            if requested_user is None:
-                
-                return render_template('create-profile.html', email=email, password=password)
-            else:
-                return 'Username has already been taken'
-
-                #
-        elif request.form['submitButton'] == 'createProfile':
-            form = request.form
-            # create the user
-            email = form['email']
-            user = User(email)
-
-            # password
-            user.password = form['password']
-            
-            # name
-            user.first_name = form['firstName']
-            user.last_name = form['lastName']
-
-            # preferences
-            if('interests' in form):
-                user.interest_prefs = form['interests']
-            if('food' in form):
-                user.food_prefs = form['food']
-
-            # lunch time
-            user.time_pref = form['lunch-time']
-
-            # address
-            user.addr = form['address']
-
-            # login the user
-            login_user(user)
-            
-            # TODO: change to match-me and log in user
-            return redirect(url_for('index'))
+                return 'Incorrect password.'
+        else:
+            # return redirect(url_for('register', email=request.form['email'], password=request.form['password']))
+            return 'Incorrect email.'
             
     return render_template('login.html')
 
@@ -157,13 +95,6 @@ def login():
 @app.route('/home')
 def home():
     return render_template('home.html')
-
-
-@app.route("/logout")
-def logout():
-    logout_user()
-    return redirect(url_for('login'))
-
 
 @app.route("/")
 def index(): # TODO: Check if user is logged in 
