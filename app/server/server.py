@@ -10,6 +10,8 @@ import os
 import json
 from User import User
 import places
+import datetime
+from time import time
 
 from being_matched import BeingMatched
 
@@ -24,6 +26,7 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
+
 @login_manager.user_loader
 def load_user(email):
     user = mongo.db.users.find_one({"email": email})
@@ -33,9 +36,9 @@ def load_user(email):
     new_user.db_user(user)
     return new_user
 
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    print('hit{}'.format(request.args))
     if request.method == 'POST':
         
         # routing from signup
@@ -65,11 +68,22 @@ def register():
             form = request.form
             user = User(form['email'])
 
+            now = datetime.datetime.now()
+
+            tempTimeString = now.strftime("%d%m%Y") + form['lunch-time']
+
+            tempTime = datetime.datetime.strptime(tempTimeString, "%d%m%Y%H:%M")
+
+            timeDiff = (tempTime-datetime.datetime(1970,1,1)).total_seconds() 
+            
+            print('timeDiff:',timeDiff)
+
             # password
             user.password = form['password']
             user.first_name = form['firstName']
             user.last_name = form['lastName']
-            user.time_pref = form['lunch-time']
+            user.time_pref = round(timeDiff)
+            print('user.time_pref:', user.time_pref)
             user.addr = form['address']
             
             # preferences
@@ -78,11 +92,13 @@ def register():
             if('food' in form):
                 user.food_prefs = form['food']
 
-            # create and login user
-            login_user(user)
+            update = {'first_name':user.first_name, 'last_name':user.last_name, 'time_pref':user.time_pref, 'addr':user.addr, 'interest_prefs':user.interest_prefs, 'food_prefs':user.food_prefs}
 
-            # redirect to the match-me page
-            return redirect(url_for('user_portal'))
+            # find and update user
+            mongo.db.users.update_one({'email': user.email}, {'$set': update})
+
+            # redirect to the login page
+            return redirect(url_for('login'))
             
     
     return render_template('sign-up.html')
@@ -100,6 +116,7 @@ def login():
             if check_password_hash(requested_user["password"], password):
                 user = User(email=request.form['email'])
                 login_user(user)
+                print('current_user.time_pref:', current_user.time_pref)
                 return redirect(url_for('user_portal'))
             else:
                 return 'Incorrect credentials.'
@@ -144,9 +161,29 @@ def logout():
 def index(): # TODO: Check if user is logged in
     return redirect(url_for("login"))
 
+
 @app.route("/user-portal")
 def user_portal():
     return render_template("user-portal.html")
 
+
+@app.route("/matched")
+def match():
+    # TODO: remove, testing stuff
+    print('current_user.time_pref:', current_user.time_pref)
+    print('current_user.email:', current_user.email)
+
+    sec = int(round(time()))
+    print('sec:', sec)
+    dateFormattedTest = datetime.datetime.fromtimestamp(sec-1800)
+    print('dateFormattedTest:', dateFormattedTest)
+
+    # produce datetime obj from seconds-since-epoch time_pref on current_user (add subtract 30 minutes to get notification time)
+    dateFormatted = datetime.datetime.fromtimestamp(float(current_user.time_pref) - 1800)
+
+    # send current_user's email and formatted time to matching.html
+    return render_template("matching.html", email=current_user.email, time=dateFormatted.strftime('%I:%M %p'))
+
+
 if __name__ == "__main__":
-    socketio.run(app, debug=True)  # debug = true to put in debug mode
+    socketio.run(app, debug=True)  # debug = true to put in debug mod
