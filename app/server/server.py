@@ -82,7 +82,7 @@ def register():
 
 # sets up the page for registration
 @app.route('/login', methods=['GET', 'POST'])
-def login(email=None, password=None):
+def login():
     if request.method == 'POST':
         print('request.form[\'submitButton\']:{}'.format(
             request.form['submitButton']))
@@ -91,6 +91,7 @@ def login(email=None, password=None):
         if request.form['submitButton'] == 'loginButton':
             print('LoginButton')
             email = request.form['email']
+            password = request.form['password']
 
             requested_user = mongo.db.users.find_one({'email': email})
             if requested_user:
