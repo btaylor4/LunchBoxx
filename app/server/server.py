@@ -20,12 +20,14 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
+
 @login_manager.user_loader
 def load_user(user_id):
     user = mongo.db.users.find_one({"username": user_id})
     if not user:
         return None
     return User(user['_id'])
+
 
 class User():
     def __init__(self, username):
@@ -44,42 +46,61 @@ class User():
     def get_id(self):
         return self.username
 
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
         hashed_password = generate_password_hash(password, method='sha256')
-        requested_user = mongo.db.users.find_one({'email': email}) # searches the data base for the username chosen
+        # searches the data base for the username chosen
+        requested_user = mongo.db.users.find_one({'email': email})
         if requested_user is None:
-            mongo.db.users.insert({'email': email, 'password': password}) # makes a new user inside data base if non already exits
-            return redirect(url_for('index')) # send back to landing page
-    
+            # makes a new user inside data base if non already exits
+            mongo.db.users.insert({'email': email, 'password': password})
+            return redirect(url_for('index'))  # send back to landing page
+
         else:
             return 'Username has already been taken'
-            
+
     return render_template('registration.html')
 
-@app.route('/login', methods=['GET', 'POST']) # sets up the page for registration
+
+# sets up the page for registration
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        requested_user = mongo.db.users.find_one({'username': request.form['username']})
+        requested_user = mongo.db.users.find_one(
+            {'username': request.form['username']})
         if requested_user:
             if check_password_hash(requested_user["password"], request.form['password']):
                 user = User(username=request.form['username'])
                 login_user(user)
-                return redirect(url_for('home')) # send to page with video functionality
+                # send to page with video functionality
+                return redirect(url_for('home'))
         return 'Invalid Credentials. Please try again.'
     return render_template('login.html')
+
 
 @app.route("/logout")
 def logout():
     logout_user()
     return redirect(url_for('index'))
-    
+
+
 @app.route("/")
 def index():
     return render_template("index.html")
 
+
+@app.route("/create-profile", methods=['GET', 'POST'])
+def create_profile():
+    if request.method == 'GET':
+        return render_template("create-profile.html")
+    elif request.method == 'POST':
+        # TODO: change to match-me and log in user
+        return redirect(url_for('index'))
+
+
 if __name__ == "__main__":
-    socketio.run(app, debug=True) # debug = true to put in debug mode
+    socketio.run(app, debug=True)  # debug = true to put in debug mode

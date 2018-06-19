@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>LunchBoxx</title>
+
+	<!-- Bootstrap Core CSS -->
+	<link href="{{ url_for('static',filename='css/bootstrap.min.css') }}" rel="stylesheet">
+
+	<!-- Semantic UI CSS -->
+	<link rel="stylesheet" href="{{ url_for('static',filename='css/semantic-ui.css') }}">
+
+	<!-- Custom Fonts -->
+
+	<!-- Custom CSS -->
+	<link rel="stylesheet" href="{{ url_for('static',filename='css/sb-admin.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static',filename='css/index_styles.css') }}" type="text/css">
+
+</head>
+
+<body>
+	<div class="container">
+		<div class="row">
+			<div class="">
+				<div class="panel panel-default" style="margin:0px">
+					<div class="panel-heading">
+						<strong>Create Profile</strong>
+					</div>
+					<div class="panel-body">
+						<form class="form-horizontal" role="form" method="POST">
+
+							<!-- Form Name -->
+							<div class="form-group">
+								<label for="full-name" class="col-sm-3 control-label">Name</label>
+								<div class="row-sm-3">
+									<input name="firstName" className="col-sm-3 control-label" placeholder="first name" />
+									<input name="lastName" className="col-sm-3 control-label" placeholder="last name" />
+								</div>
+							</div>
+
+							<!-- Preferences -->
+							<div class="form-group" style="background-color: lightgrey">
+								<label for="default-preferences" class="col-sm-3 control-label">Preferences</label>
+								<!-- Interests -->
+								<div class="col-sm-3">
+									<label for="interests" class="col-sm-3 control-label">Interests</label>
+									<select name="interests" class="ui fluid search dropdown" multiple>
+										<option value="angular">Angular</option>
+										<option value="css">CSS</option>
+										<option value="design">Graphic Design</option>
+										<option value="ember">Ember</option>
+										<option value="html">HTML</option>
+										<option value="ia">Information Architecture</option>
+										<option value="javascript">Javascript</option>
+										<option value="mech">Mechanical Engineering</option>
+										<option value="meteor">Meteor</option>
+										<option value="node">NodeJS</option>
+										<option value="plumbing">Plumbing</option>
+										<option value="python">Python</option>
+										<option value="rails">Rails</option>
+										<option value="react">React</option>
+										<option value="repair">Kitchen Repair</option>
+										<option value="ruby">Ruby</option>
+										<option value="ui">UI Design</option>
+										<option value="ux">User Experience</option>
+									</select>
+								</div>
+
+								<!-- Food -->
+								<div class="col-sm-3">
+									<label for="food" class="col-sm-3 control-label">Food</label>
+									<select name="food" multiple class="ui fluid dropdown">
+										<option value="italian">Italian</option>
+										<option value="mexican">Mexican</option>
+										<option value="spanish">Spanish</option>
+										<option value="fast-food">Fast Food</option>
+										<option value="bbq">BBQ</option>
+										<option value="japaneese">Korean</option>
+										<option value="vegitarian">vegitarian</option>
+										<option value="backed-goods">Baked Goods</option>
+										<option value="brazilian">Brazilian</option>
+										<option value="korean">Korean</option>
+										<option value="greek">Greek</option>
+										<option value="cuban">Cuban</option>
+										<option value="indian">Indian</option>
+										<option value="caribean">Caribean</option>
+										<option value="latin">Latin</option>
+										<option value="argintinian">Argintinian</option>
+										<option value="breakfast">Breakfast</option>
+									</select>
+								</div>
+							</div>
+
+							<!-- Time -->
+							<div class="form-group default-time ">
+								<label for="lunch-time" class="col-sm-3 control-label">Lunch Time</label>
+								<div class="row-sm-3">
+									<input name="lunch-time" className="col-sm-3 control-label" placeholder="00:00" />
+								</div>
+							</div>
+
+							<!-- Address -->
+							<div class="form-group address" style="background-color: lightgrey">
+								<label for="email" class="col-sm-3 control-label">Address</label>
+								<div class="col-sm-9 ">
+									<input class="form-control" placeholder="2000 Ultimate Way, Weston, FL" />
+								</div>
+							</div>
+							<button type="submit">Create Profile</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- jQuery -->
+	<script src="js/jquery.js "></script>
+
+
+</body>
+
+</html>
