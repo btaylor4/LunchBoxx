@@ -27,27 +27,35 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
-
-"""
 @login_manager.user_loader
 def load_user(user_id):
     user = mongo.db.users.find_one({"username": user_id})
     if not user:
         return None
     return User(user['_id'])
-"""
 
 class User(object):
-    def __init__(self, email, password, first_name, last_name, interest_prefs, food_prefs, time_pref, addr):
+    def __init__(self, email):
         self.email = email
-        self.password = password
-        self.first_name = first_name
-        self.last_name = last_name
-        self.interest_prefs = interest_prefs
-        self.food_prefs = food_prefs
-        self.time_pref = time_pref
-        self.addr = addr
+        self.password = ''
+        self.first_name = ''
+        self.last_name = ''
+        self.interest_prefs = []
+        self.food_prefs = []
+        self.time_pref = ''
+        self.addr = ''
 
+    def is_authenticated(self):
+        return True
+
+    def is_active(self):
+        return True
+
+    def is_anonymous(self):
+        return False
+
+    def get_id(self):
+        return self.email
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -98,7 +106,7 @@ def login(email=None, password=None):
         # SIGN UP
         elif request.form['submitButton'] == 'signupButton':
             print('SignupButton')
-            
+
             # get form data
             email = request.form['email']
             password = request.form['password']
@@ -112,31 +120,32 @@ def login(email=None, password=None):
 
                 #
         elif request.form['submitButton'] == 'createProfile':
-            # email
-            # TODO: get the email and password passed through from login page
-            email = request.form['email']
-            password = request.form['password']
+            form = request.form
+            # create the user
+            email = form['email']
+            user = User(email)
+
+            # password
+            user.password = form['password']
             
             # name
-            first_name = request.form['firstName']
-            last_name = request.form['lastName']
+            user.first_name = form['firstName']
+            user.last_name = form['lastName']
 
             # preferences
-            interest_prefs = request.form['interests']
-            food_prefs = request.form['food']
+            if('interests' in form):
+                user.interest_prefs = form['interests']
+            if('food' in form):
+                user.food_prefs = form['food']
 
             # lunch time
-            time_pref = request.form['lunch-time']
+            user.time_pref = form['lunch-time']
 
             # address
-            addr = request.form['address']
-            
-            # create a user with the data
-            user = User(email, password, first_name, last_name, interest_prefs, food_prefs, time_pref, addr)
+            user.addr = form['address']
 
-            print(user)
+            # login the user
             login_user(user)
-
             
             # TODO: change to match-me and log in user
             return redirect(url_for('index'))
