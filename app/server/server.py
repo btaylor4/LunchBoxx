@@ -8,6 +8,8 @@ from bson import json_util, ObjectId
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
 import json
+import User
+import places
 
 # trying to pass stuff from login to register when user not in DB
 
@@ -36,17 +38,6 @@ def load_user(user_id):
         return None
     return User(user['_id'])
 """
-
-class User(object):
-    def __init__(self, email, password, first_name, last_name, interest_prefs, food_prefs, time_pref, addr):
-        self.email = email
-        self.password = password
-        self.first_name = first_name
-        self.last_name = last_name
-        self.interest_prefs = interest_prefs
-        self.food_prefs = food_prefs
-        self.time_pref = time_pref
-        self.addr = addr
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -95,13 +86,13 @@ def login():
             else:
                 # return redirect(url_for('register', email=request.form['email'], password=request.form['password']))
                 return 'Incorrect email.'
-        
+
         # SIGN UP
         elif request.form['submitButton'] == 'signupButton':
             print('SignupButton')
             requested_user = mongo.db.users.find_one({'email': email})
             if requested_user is None:
-                
+
                 return render_template('create-profile.html', form=request.form)
             else:
                 return 'Username has already been taken'
@@ -112,7 +103,7 @@ def login():
             # TODO: get the email and password passed through from login page
             email = request.form['email']
             password = request.form['password']
-            
+
             # name
             first_name = request.form['firstName']
             last_name = request.form['lastName']
@@ -126,17 +117,17 @@ def login():
 
             # address
             addr = request.form['address']
-            
+
             # create a user with the data
             user = User(email, password, first_name, last_name, interest_prefs, food_prefs, time_pref, addr)
 
             print(user)
             login_user(user)
 
-            
+
             # TODO: change to match-me and log in user
             return redirect(url_for('index'))
-            
+
     return render_template('login.html')
 
 
@@ -144,6 +135,15 @@ def login():
 def home():
     return render_template('home.html')
 
+@app.route('/places', methods=['GET', 'POST'])
+def place():
+	print("I AM IN PLACE YO")
+	food_type = 'cuban'
+	coord = (26.0895906,-80.3669549)
+	resp = places.getNearbyPlaces(food_type, coord)
+
+	print("The top restaurant is: ", resp)
+	return
 
 @app.route("/logout")
 def logout():
