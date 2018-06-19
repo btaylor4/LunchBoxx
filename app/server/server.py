@@ -9,6 +9,11 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import os
 import json
 
+# trying to pass stuff from login to register when user not in DB
+def func(request):
+    return request
+
+
 app = Flask(__name__, static_folder="../static", template_folder="../static")
 app.config['MONGO_DBNAME'] = "lunchbox"
 app.config['MONGO_URI'] = "mongodb://slackers:bigwilli3@ds263460.mlab.com:63460/lunchbox"
@@ -49,6 +54,7 @@ class User():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    print('hit{}'.format(request.args))
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
@@ -57,32 +63,53 @@ def register():
         requested_user = mongo.db.users.find_one({'email': email})
         if requested_user is None:
             # makes a new user inside data base if non already exits
-            mongo.db.users.insert({'email': email, 'password': password})
+            mongo.db.users.insert(
+                {'email': email, 'password': hashed_password})
             return redirect(url_for('index'))  # send back to landing page
 
         else:
             return 'Username has already been taken'
-
-    return render_template('registration.html')
+    if request.args:
+        return render_template('registration.html', email=request.args['email'], password=request.args['password'])
+    else:
+        return render_template('registration.html')
 
 
 # sets up the page for registration
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    print('hitlogin')
     if request.method == 'POST':
-        print('hitloginpost')
-        requested_user = mongo.db.users.find_one(
-            {'email': request.form['email']})
-        if requested_user:
-            print('hitloginSecondIf')
-            if check_password_hash(requested_user["password"], request.form['password']):
-                # TODO fix this? username shoudld be email?
-                user = User(email=request.form['email'])
-                login_user(user)
-                return redirect(url_for('home'))
-        return 'Invalid Credentials. Please try again.'
+        email = request.form['email']
+        password = request.form['password']
+        print('request.form[\'submitButton\']:{}'.format(request.form['submitButton']))
+        if request.form['submitButton'] == 'loginButton':
+            print('LoginButton')
+            requested_user = mongo.db.users.find_one(
+                {'email': email})
+            if requested_user:
+                if check_password_hash(requested_user["password"], password):
+                    user = User(email=email)
+                    login_user(user)
+                    return redirect(url_for('home'))
+                else:
+                    return 'Incorrect password.'
+            else:
+                return 'Incorrect email.'
+                #return redirect(url_for('register', email=request.form['email'], password=request.form['password']))
+        elif request.form['submitButton'] == 'signupButton':
+            print('SignupButton')
+            requested_user = mongo.db.users.find_one({'email': email})
+            if requested_user is None:
+                return render_template('registration.html', form = request.form)
+
+            else:
+                return 'Username has already been taken'
     return render_template('login.html')
+
+
+@app.route('/home')
+def home():
+    return render_template('home.html')
 
 
 @app.route("/logout")
