@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>LunchBoxx</title>
+    <title>Sign-Up | LunchBoxx</title>
     <link href="{{ url_for('static',filename='css/index_styles.css') }}" rel="stylesheet" type='text/css'>
     <link href="{{ url_for('static',filename='css/bootstrap.min.css') }}" rel="stylesheet" type='text/css'>
 
@@ -19,26 +19,32 @@
             <div class="col-md-4 col-md-offset-4">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <strong>Login to LunchBoxx</strong>
+                        <strong>Sign Up</strong>
                     </div>
                     <div class="panel-body">
                         <form class="form-horizontal" role="form" method="POST">
                             <div class="form-group">
                                 <label for="email" class="col-sm-3 control-label"> Email</label>
                                 <div class="col-sm-9">
-                                    <input type="email" class="form-control" id="email" placeholder="Email" name="email">
+                                    <input type="email" class="form-control" placeholder="Email" name="email">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="password" class="col-sm-3 control-label">Password</label>
+                                <label for="password" class="col-sm-3 control-label"> Password</label>
                                 <div class="col-sm-9">
-                                    <input type="password" class="form-control" id="password" placeholder="Password" name="password">
+                                    <input type="password" class="form-control" placeholder="Password" name="password">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="verify-password" class="col-sm-3 control-label"> Password</label>
+                                <div class="col-sm-9">
+                                    <input type="password" class="form-control" placeholder="Password" name="verify-password">
                                 </div>
                             </div>
                             <div class="form-group last">
                                 <div class="col-sm-offset-3 col-sm-9">
-                                    <a class="btn btn-success btn-sm" id="signupButton" name="submitButton" value="signupButton" href="/register">Sign Up</a>
-                                    <button type="submit" class="btn btn-success btn-sm" id="loginButton" name="submitButton" value="loginButton">Log In</button>
+                                    <a type="submit" class="btn btn-success btn-sm" href="/">back</a>
+                                    <button type="submit" class="btn btn-success btn-sm" name="nextButton" value="create-profile">next</button>
                                 </div>
                             </div>
                         </form>
