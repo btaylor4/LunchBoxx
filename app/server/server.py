@@ -11,13 +11,6 @@ import json
 import User
 import places
 
-# trying to pass stuff from login to register when user not in DB
-
-
-def func(request):
-    return request
-
-
 app = Flask(__name__, static_folder="../static", template_folder="../static")
 app.config['MONGO_DBNAME'] = "lunchbox"
 app.config['MONGO_URI'] = "mongodb://slackers:bigwilli3@ds263460.mlab.com:63460/lunchbox"
@@ -29,16 +22,38 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
-
-"""
 @login_manager.user_loader
 def load_user(user_id):
     user = mongo.db.users.find_one({"username": user_id})
     if not user:
         return None
     return User(user['_id'])
-"""
 
+<<<<<<< HEAD
+=======
+class User(object):
+    def __init__(self, email):
+        self.email = email
+        self.password = ''
+        self.first_name = ''
+        self.last_name = ''
+        self.interest_prefs = []
+        self.food_prefs = []
+        self.time_pref = ''
+        self.addr = ''
+
+    def is_authenticated(self):
+        return True
+
+    def is_active(self):
+        return True
+
+    def is_anonymous(self):
+        return False
+
+    def get_id(self):
+        return self.email
+>>>>>>> 6aebe576c8ce33c1220710cf228ee7e12b3333ca
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -57,76 +72,27 @@ def register():
 
         else:
             return 'Username has already been taken'
-    if request.args:
-        return render_template('registration.html', email=request.args['email'], password=request.args['password'])
-    else:
-        return render_template('registration.html')
+
+    return render_template('create-profile.html')
 
 
 # sets up the page for registration
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        print('request.form[\'submitButton\']:{}'.format(
-            request.form['submitButton']))
         email = request.form['email']
         password = request.form['password']
 
-        # LOGIN
-        if request.form['submitButton'] == 'loginButton':
-            print('LoginButton')
-
-            requested_user = mongo.db.users.find_one({'email': email})
-            if requested_user:
-                if check_password_hash(requested_user["password"], password):
-                    login_user(requested_user)
-                    return redirect(url_for('home'))
-                else:
-                    return 'Incorrect password.'
+        requested_user = mongo.db.users.find_one({'email': email})
+        if requested_user:
+            if check_password_hash(requested_user["password"], password):
+                login_user(requested_user)
+                return redirect(url_for('home'))
             else:
-                # return redirect(url_for('register', email=request.form['email'], password=request.form['password']))
-                return 'Incorrect email.'
-
-        # SIGN UP
-        elif request.form['submitButton'] == 'signupButton':
-            print('SignupButton')
-            requested_user = mongo.db.users.find_one({'email': email})
-            if requested_user is None:
-
-                return render_template('create-profile.html', form=request.form)
-            else:
-                return 'Username has already been taken'
-
-                #
-        elif request.form['submitButton'] == 'createProfile':
-            # email
-            # TODO: get the email and password passed through from login page
-            email = request.form['email']
-            password = request.form['password']
-
-            # name
-            first_name = request.form['firstName']
-            last_name = request.form['lastName']
-
-            # preferences
-            interest_prefs = request.form['interests']
-            food_prefs = request.form['food']
-
-            # lunch time
-            time_pref = request.form['lunch-time']
-
-            # address
-            addr = request.form['address']
-
-            # create a user with the data
-            user = User(email, password, first_name, last_name, interest_prefs, food_prefs, time_pref, addr)
-
-            print(user)
-            login_user(user)
-
-
-            # TODO: change to match-me and log in user
-            return redirect(url_for('index'))
+                return 'Incorrect password.'
+        else:
+            # return redirect(url_for('register', email=request.form['email'], password=request.form['password']))
+            return 'Incorrect email.'
 
     return render_template('login.html')
 
@@ -152,9 +118,12 @@ def logout():
 
 
 @app.route("/")
-def index():
+def index(): # TODO: Check if user is logged in
     return redirect(url_for("login"))
 
+@app.route("/user-portal")
+def user_portal():
+    return render_template("user-portal.html")
 
 if __name__ == "__main__":
     socketio.run(app, debug=True)  # debug = true to put in debug mode
