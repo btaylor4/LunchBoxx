@@ -13,6 +13,8 @@ import places
 import datetime
 from time import time
 
+from being_matched import BeingMatched
+
 app = Flask(__name__, static_folder="../static", template_folder="../static")
 app.config['MONGO_DBNAME'] = "lunchbox"
 app.config['MONGO_URI'] = "mongodb://slackers:bigwilli3@ds263460.mlab.com:63460/lunchbox"
@@ -26,11 +28,13 @@ login_manager.login_view = 'login'
 
 
 @login_manager.user_loader
-def load_user(user_id):
-    user = mongo.db.users.find_one({"email": user_id})
+def load_user(email):
+    user = mongo.db.users.find_one({"email": email})
     if not user:
         return None
-    return User(user['_id'])
+    new_user = User(email)
+    new_user.db_user(user)
+    return new_user
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -119,11 +123,17 @@ def login():
 
     return render_template('login.html')
 
-@app.route('/preferences', methods=['GET', 'POST'])    
+@app.route('/preferences', methods=['GET', 'POST'])
+@login_required    
 def preferences():
     if request.method == 'POST':
-        print(request.form)
+        food_preferences = request.form.getlist('food')
+        mongo.db.being_matched.insert({'email': current_user.email, 'preferences': food_preferences, 'time_pref': current_user.time_pref })
+
+        # TODO Return template for 'YOU'RE BEING MATCHED'
+
     return render_template('preferences.html')
+
 
 @app.route('/home')
 def home():
