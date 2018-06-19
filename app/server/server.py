@@ -78,12 +78,12 @@ def login():
     if request.method == 'POST':
         print('request.form[\'submitButton\']:{}'.format(
             request.form['submitButton']))
+        email = request.form['email']
+        password = request.form['password']
 
         # LOGIN
         if request.form['submitButton'] == 'loginButton':
             print('LoginButton')
-            email = request.form['email']
-            password = request.form['password']
 
             requested_user = mongo.db.users.find_one({'email': email})
             if requested_user:
