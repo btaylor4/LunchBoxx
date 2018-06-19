@@ -30,9 +30,9 @@ def load_user(user_id):
 
 
 class User():
-    def __init__(self, username):
-        self.username = username
-        self.email = None
+    def __init__(self, email):
+        self.username = None
+        self.email = email
 
     def is_authenticated(self):
         return True
@@ -69,14 +69,17 @@ def register():
 # sets up the page for registration
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    print('hitlogin')
     if request.method == 'POST':
+        print('hitloginpost')
         requested_user = mongo.db.users.find_one(
-            {'username': request.form['username']})
+            {'email': request.form['email']})
         if requested_user:
+            print('hitloginSecondIf')
             if check_password_hash(requested_user["password"], request.form['password']):
-                user = User(username=request.form['username'])
+                # TODO fix this? username shoudld be email?
+                user = User(email=request.form['email'])
                 login_user(user)
-                # send to page with video functionality
                 return redirect(url_for('home'))
         return 'Invalid Credentials. Please try again.'
     return render_template('login.html')
@@ -85,12 +88,12 @@ def login():
 @app.route("/logout")
 def logout():
     logout_user()
-    return redirect(url_for('index'))
+    return redirect(url_for('login'))
 
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return redirect(url_for("login"))
 
 
 @app.route("/create-profile", methods=['GET', 'POST'])
