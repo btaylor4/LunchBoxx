@@ -8,6 +8,8 @@ from bson import json_util, ObjectId
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
 import json
+from User import User
+import places
 
 app = Flask(__name__, static_folder="../static", template_folder="../static")
 app.config['MONGO_DBNAME'] = "lunchbox"
@@ -26,29 +28,6 @@ def load_user(user_id):
     if not user:
         return None
     return User(user['_id'])
-
-class User(object):
-    def __init__(self, email):
-        self.email = email
-        self.password = ''
-        self.first_name = ''
-        self.last_name = ''
-        self.interest_prefs = []
-        self.food_prefs = []
-        self.time_pref = ''
-        self.addr = ''
-
-    def is_authenticated(self):
-        return True
-
-    def is_active(self):
-        return True
-
-    def is_anonymous(self):
-        return False
-
-    def get_id(self):
-        return self.email
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -121,9 +100,8 @@ def login():
             else:
                 return 'Incorrect credentials.'
         else:
-            # return redirect(url_for('register', email=request.form['email'], password=request.form['password']))
-            return 'Incorrect credentials.'
-            
+            return 'Incorrect email.'
+
     return render_template('login.html')
 
 @app.route('/preferences', methods=['GET', 'POST'])    
@@ -136,8 +114,24 @@ def preferences():
 def home():
     return render_template('home.html')
 
+@app.route('/places', methods=['GET', 'POST'])
+def place():
+	print("I AM IN PLACE YO")
+	food_type = 'italian'
+	coord = (26.0895906,-80.3669549)
+	resp = places.getNearbyPlaces(food_type, coord)
+
+	print("The top restaurant is: ", resp)
+	return
+
+@app.route("/logout")
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
+
+
 @app.route("/")
-def index(): # TODO: Check if user is logged in 
+def index(): # TODO: Check if user is logged in
     return redirect(url_for("login"))
 
 @app.route("/user-portal")
