@@ -3,5 +3,5 @@ node_modules/
 bundle.js
 .vscode
 *.pyc
-__pycache__
+*__pycache__*
 *.lock

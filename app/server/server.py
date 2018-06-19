@@ -72,7 +72,7 @@ def register():
 
             tempTimeString = now.strftime("%d%m%Y") + form['lunch-time']
 
-            tempTime = datetime.datetime.strptime(tempTimeString, "%d%m%Y%I:%M")
+            tempTime = datetime.datetime.strptime(tempTimeString, "%d%m%Y%H:%M")
 
             timeDiff = (tempTime-datetime.datetime(1970,1,1)).total_seconds() 
             
@@ -92,11 +92,13 @@ def register():
             if('food' in form):
                 user.food_prefs = form['food']
 
-            # create and login user
-            login_user(user)
+            update = {'first_name':user.first_name, 'last_name':user.last_name, 'time_pref':user.time_pref, 'addr':user.addr, 'interest_prefs':user.interest_prefs, 'food_prefs':user.food_prefs}
 
-            # redirect to the match-me page
-            return redirect(url_for('user_portal'))
+            # find and update user
+            mongo.db.users.update_one({'email': user.email}, {'$set': update})
+
+            # redirect to the login page
+            return redirect(url_for('login'))
             
     
     return render_template('sign-up.html')
