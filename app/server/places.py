@@ -23,6 +23,9 @@ def getNearbyPlaces(food_type, coords, radius=5000):
 
 	results = res['results']
 
-	topRestaurantName = results[0]['name']
+	topRestaurantName = None
+
+	if len(results) > 0:
+		topRestaurantName = results[0]['name']
 
 	return topRestaurantName

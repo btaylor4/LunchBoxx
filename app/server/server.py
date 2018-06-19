@@ -29,32 +29,6 @@ def load_user(user_id):
         return None
     return User(user['_id'])
 
-<<<<<<< HEAD
-=======
-class User(object):
-    def __init__(self, email):
-        self.email = email
-        self.password = ''
-        self.first_name = ''
-        self.last_name = ''
-        self.interest_prefs = []
-        self.food_prefs = []
-        self.time_pref = ''
-        self.addr = ''
-
-    def is_authenticated(self):
-        return True
-
-    def is_active(self):
-        return True
-
-    def is_anonymous(self):
-        return False
-
-    def get_id(self):
-        return self.email
->>>>>>> 6aebe576c8ce33c1220710cf228ee7e12b3333ca
-
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     print('hit{}'.format(request.args))
@@ -104,7 +78,7 @@ def home():
 @app.route('/places', methods=['GET', 'POST'])
 def place():
 	print("I AM IN PLACE YO")
-	food_type = 'cuban'
+	food_type = 'italian'
 	coord = (26.0895906,-80.3669549)
 	resp = places.getNearbyPlaces(food_type, coord)
 
