@@ -81,7 +81,8 @@ def login():
         requested_user = mongo.db.users.find_one({'email': email})
         if requested_user:
             if check_password_hash(requested_user["password"], password):
-                login_user(requested_user)
+                user = User(email=request.form['email'])
+                login_user(user)
                 return redirect(url_for('home'))
             else:
                 return 'Incorrect password.'
