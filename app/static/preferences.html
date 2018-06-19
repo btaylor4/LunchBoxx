@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>LunchBoxx</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="{{ url_for('static',filename='css/bootstrap.min.css') }}" rel="stylesheet">
+
+    <!-- Semantic UI CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.9/semantic.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.9/semantic.min.js"></script>
+    <!-- Custom Fonts -->
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/sb-admin.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/index_styles.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/create_profile_styles.css') }}" type="text/css">
+
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3 row-md-4 row-md-offset-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <strong>Find your matches</strong>
+                    </div>
+                    <div class="panel-body">
+                        <form class="form-horizontal" role="form" method="POST">
+                            <!-- Form Name -->
+                            <div class="form-group section">
+                                <label for="lunch-time" class="">Lunch Time</label>
+                                <input name="lunch-time" class="" placeholder="00:00" />
+                            </div>
+
+                            <!-- Preferences -->
+                            <div class="form-group">
+                                <label for="default-preferences" class="preference-label">Preferences</label>
+                                <!-- Food -->
+                                <div class="ui fluid dropdown selection multiple" tabindex="0">
+                                    <select name="food" multiple>
+                                        <option value="italian">Italian</option>
+                                        <option value="mexican">Mexican</option>
+                                        <option value="spanish">Spanish</option>
+                                        <option value="fast-food">Fast Food</option>
+                                        <option value="bbq">BBQ</option>
+                                        <option value="japaneese">Korean</option>
+                                        <option value="vegitarian">vegitarian</option>
+                                        <option value="backed-goods">Baked Goods</option>
+                                        <option value="brazilian">Brazilian</option>
+                                        <option value="korean">Korean</option>
+                                        <option value="greek">Greek</option>
+                                        <option value="cuban">Cuban</option>
+                                        <option value="indian">Indian</option>
+                                        <option value="caribean">Caribean</option>
+                                        <option value="latin">Latin</option>
+                                        <option value="argintinian">Argintinian</option>
+                                        <option value="breakfast">Breakfast</option>
+                                    </select>
+                                    <div class="default text">Food preferences</div>
+                                    <div class="menu" tabindex="-1">
+                                        <div class="item" data-value="italian">Italian</div>
+                                        <div class="item" data-value="mexican">Mexican</div>
+                                        <div class="item" data-value="spanish">Spanish</div>
+                                        <div class="item" data-value="fast-food">Fast Food</div>
+                                        <div class="item" data-value="bbq">BBQ</div>
+                                        <div class="item" data-value="japaneese">Korean</div>
+                                        <div class="item" data-value="vegitarian">vegitarian</div>
+                                        <div class="item" data-value="backed-goods">Baked Goods</div>
+                                        <div class="item" data-value="brazilian">Brazilian</div>
+                                        <div class="item" data-value="korean">Korean</div>
+                                        <div class="item" data-value="greek">Greek</div>
+                                        <div class="item" data-value="cuban">Cuban</div>
+                                        <div class="item" data-value="indian">Indian</div>
+                                        <div class="item" data-value="caribean">Caribean</div>
+                                        <div class="item" data-value="latin">Latin</div>
+                                        <div class="item" data-value="argintinian">Argintinian</div>
+                                        <div class="item" data-value="breakfast">Breakfast</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="button-container">
+                                <button type="submit" name="submitButton" value="createProfile" class="next-button">Find Matches</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(".ui.dropdown").dropdown();
+    </script>
+</body>
+
+</html>
