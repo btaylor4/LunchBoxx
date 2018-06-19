@@ -117,14 +117,20 @@ def login():
             if check_password_hash(requested_user["password"], password):
                 user = User(email=request.form['email'])
                 login_user(user)
-                return redirect(url_for('home'))
+                return redirect(url_for('user_portal'))
             else:
-                return 'Incorrect password.'
+                return 'Incorrect credentials.'
         else:
             # return redirect(url_for('register', email=request.form['email'], password=request.form['password']))
-            return 'Incorrect email.'
+            return 'Incorrect credentials.'
             
     return render_template('login.html')
+
+@app.route('/preferences', methods=['GET', 'POST'])    
+def preferences():
+    if request.method == 'POST':
+        print(request.form)
+    return render_template('preferences.html')
 
 @app.route('/home')
 def home():
