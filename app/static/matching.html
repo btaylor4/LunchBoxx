@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>LunchBoxx</title>
+
+	<!-- Bootstrap Core CSS -->
+	<link href="{{ url_for('static',filename='css/bootstrap.min.css') }}" rel="stylesheet">
+
+	<!-- Semantic UI CSS -->
+	<link rel="stylesheet" href="{{ url_for('static',filename='css/semantic-ui.css') }}">
+
+	<!-- Custom Fonts -->
+
+	<!-- Custom CSS -->
+	<link rel="stylesheet" href="{{ url_for('static',filename='css/sb-admin.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static',filename='css/index_styles.css') }}" type="text/css">
+	<link rel="stylesheet" href="{{ url_for('static',filename='css/create_profile_styles.css') }}" type="text/css">
+
+</head>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-3 row-md-4 row-md-offset-4">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h1 class="text-center">You're being matched!</h1>
+          </div>
+          <div class="panel-body">
+            <strong>Check back here, or {{email}} at {{time}} for your lunch details.</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--jQuery-->
+  <script src="js/jquery.js"></script>
+
+</body>
+
+</html>
