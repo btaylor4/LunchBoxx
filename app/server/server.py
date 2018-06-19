@@ -165,9 +165,12 @@ def logout():
 
 
 @app.route("/")
-def index():
+def index(): # TODO: Check if user is logged in 
     return redirect(url_for("login"))
 
+@app.route("/user-portal")
+def user_portal():
+    return render_template("user-portal.html")
 
 if __name__ == "__main__":
     socketio.run(app, debug=True)  # debug = true to put in debug mode
