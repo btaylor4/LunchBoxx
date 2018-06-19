@@ -74,16 +74,15 @@ def register():
 
 # sets up the page for registration
 @app.route('/login', methods=['GET', 'POST'])
-def login():
+def login(email=None, password=None):
     if request.method == 'POST':
         print('request.form[\'submitButton\']:{}'.format(
             request.form['submitButton']))
-        email = request.form['email']
-        password = request.form['password']
 
         # LOGIN
         if request.form['submitButton'] == 'loginButton':
             print('LoginButton')
+            email = request.form['email']
 
             requested_user = mongo.db.users.find_one({'email': email})
             if requested_user:
@@ -99,10 +98,15 @@ def login():
         # SIGN UP
         elif request.form['submitButton'] == 'signupButton':
             print('SignupButton')
+            
+            # get form data
+            email = request.form['email']
+            password = request.form['password']
+
             requested_user = mongo.db.users.find_one({'email': email})
             if requested_user is None:
                 
-                return render_template('create-profile.html', form=request.form)
+                return render_template('create-profile.html', email=email, password=password)
             else:
                 return 'Username has already been taken'
 
