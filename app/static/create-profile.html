@@ -20,14 +20,15 @@
 	<!-- Custom CSS -->
 	<link rel="stylesheet" href="{{ url_for('static',filename='css/sb-admin.css') }}">
 	<link rel="stylesheet" href="{{ url_for('static',filename='css/index_styles.css') }}" type="text/css">
+	<link rel="stylesheet" href="{{ url_for('static',filename='css/create_profile_styles.css') }}" type="text/css">
 
 </head>
 
 <body>
 	<div class="container">
 		<div class="row">
-			<div class="">
-				<div class="panel panel-default" style="margin:0px">
+			<div class="col-md-6 col-md-offset-3 row-md-4 row-md-offset-4">
+				<div class="panel panel-default">
 					<div class="panel-heading">
 						<strong>Create Profile</strong>
 					</div>
@@ -35,20 +36,18 @@
 						<form class="form-horizontal" role="form" method="POST">
 
 							<!-- Form Name -->
-							<div class="form-group">
-								<label for="full-name" class="col-sm-3 control-label">Name</label>
-								<div class="row-sm-3">
-									<input name="firstName" className="col-sm-3 control-label" placeholder="first name" />
-									<input name="lastName" className="col-sm-3 control-label" placeholder="last name" />
-								</div>
+							<div class="form-group section">
+								<label for="full-name" class="col-md-2">Name</label>
+								<input name="firstName" class="col-md-5" placeholder="first name" />
+								<input name="lastName" class="col-md-5" placeholder="last name" />
 							</div>
 
 							<!-- Preferences -->
-							<div class="form-group" style="background-color: lightgrey">
-								<label for="default-preferences" class="col-sm-3 control-label">Preferences</label>
+							<div class="form-group">
+								<label for="default-preferences" class="preference-label">Preferences</label>
 								<!-- Interests -->
-								<div class="col-sm-3">
-									<label for="interests" class="col-sm-3 control-label">Interests</label>
+								<div class="col-md-4 preference">
+									<label for="interests" class="">Interests</label>
 									<select name="interests" class="ui fluid search dropdown" multiple>
 										<option value="angular">Angular</option>
 										<option value="css">CSS</option>
@@ -72,8 +71,8 @@
 								</div>
 
 								<!-- Food -->
-								<div class="col-sm-3">
-									<label for="food" class="col-sm-3 control-label">Food</label>
+								<div class="col-md-4 preference">
+									<label for="food">Food</label>
 									<select name="food" multiple class="ui fluid dropdown">
 										<option value="italian">Italian</option>
 										<option value="mexican">Mexican</option>
@@ -94,24 +93,25 @@
 										<option value="breakfast">Breakfast</option>
 									</select>
 								</div>
-							</div>
 
-							<!-- Time -->
-							<div class="form-group default-time ">
-								<label for="lunch-time" class="col-sm-3 control-label">Lunch Time</label>
-								<div class="row-sm-3">
-									<input name="lunch-time" className="col-sm-3 control-label" placeholder="00:00" />
+								<!-- Time -->
+								<div class="col-md-4 preference">
+									<label for="lunch-time" class="">Lunch Time</label>
+									<input name="lunch-time" class="" placeholder="00:00" />
 								</div>
 							</div>
+
 
 							<!-- Address -->
-							<div class="form-group address" style="background-color: lightgrey">
-								<label for="email" class="col-sm-3 control-label">Address</label>
-								<div class="col-sm-9 ">
-									<input class="form-control" placeholder="2000 Ultimate Way, Weston, FL" />
+							<div class="form-group">
+								<label for="address-label" class="col-md-2 control-label">Address</label>
+								<div class="col-md-10 ">
+									<input name="address" class="form-control" placeholder="2000 Ultimate Way, Weston, FL" />
 								</div>
 							</div>
-							<button type="submit">Create Profile</button>
+							<div class="button-container">
+								<button type="submit" name="submitButton" value="createProfile" class="next-button">Create Profile</button>
+							</div>
 						</form>
 					</div>
 				</div>

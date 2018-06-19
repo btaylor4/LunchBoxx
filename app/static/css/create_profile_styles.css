@@ -2,3 +2,42 @@ html,
 body {
   margin: 0px;
 }
+
+.section {
+  padding: 10px;
+}
+
+.preferences {
+  background-color: #cccccc;
+}
+
+.preference {
+  padding: 20px;
+}
+
+.preference-label {
+  padding: 10px 15px;
+  background-color: #f5f5f5;
+  color: #333;
+  border-bottom: 1px solid transparent;
+  border-color: #ddd;
+  width: 100%;
+}
+
+.button-container {
+  width: 100%;
+}
+
+.next-button {
+  background-color: transparent;
+  border: 2px solid orange;
+  color: orange;
+  border-radius: 3px;
+  padding: 5px;
+  float: right;
+}
+
+.next-button:active {
+  border: 2px solid purple;
+  color: purple;
+}
