@@ -8,13 +8,13 @@ export default class Portal extends React.Component {
         <NavBar />
         <div className="jumbotron vertical-center">
           <div className="container text-center">
-            <button
+            <a
               className="btn btn-primary btn-lg"
               href="/preferences"
-              type="button"
+              role="button"
             >
               MATCH ME
-            </button>
+            </a>
           </div>
         </div>
       </div>
