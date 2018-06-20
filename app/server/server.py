@@ -10,7 +10,7 @@ import os
 import json
 from User import User
 import places
-import datetime
+from datetime import datetime
 from time import time
 from datetime import timedelta, datetime
 
@@ -143,7 +143,7 @@ def register():
             if('food' in form):
                 user.food_prefs = form.getlist('food')
             update = {'first_name': user.first_name, 'last_name': user.last_name, 'time_pref': user.time_pref, 'addr': user.addr,
-                      'interest_prefs': user.interest_prefs, 'food_prefs': user.food_prefs, 'status': "not matched"}
+                      'interest_prefs': user.interest_prefs, 'food_prefs': user.food_prefs, 'status': "not_matched"}
 
             # find and update user
             mongo.db.users.update_one({'email': user.email}, {'$set': update})
@@ -232,9 +232,25 @@ def index():  # TODO: Check if user is logged in
 @app.route("/user-portal")
 @login_required
 def user_portal():
-	print("Current user as seen from User Portal Route:: ", current_user)
-	return render_template("user-portal.html", status=current_user.status)
 
+	return render_template("user-portal.html", status=current_user.status, user=getUserDict())
+
+
+def getUserDict():
+	u = {}
+	for attr, value in current_user.__dict__.items():
+		propertyName = attr.replace("_", " ").title()
+		property = value
+
+		if isinstance(value, list):
+			property = " ".join(value)
+		u[propertyName] = property
+
+	del u['Password']
+
+	# u['Time Pref'] = datetime.strptime(u['Time Pref'])
+
+	return u
 
 @app.route("/matching")
 def matching():
