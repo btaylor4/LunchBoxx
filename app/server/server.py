@@ -124,7 +124,7 @@ def register():
             # redirect to the login page
             return redirect(url_for('login'))
         elif(request.form['nextButton'] == 'back'):
-            return redirect(url_for('register'))
+            return redirect(url_for('login'))
 
     return render_template('sign-up.html', hidden='hidden')
 
@@ -159,7 +159,7 @@ def preferences():
 
 
         mongo.db.being_matched.insert({'email': current_user.email, 'preferences': request.form.getlist('food'), 'time_pref': timeDiff })
-        mongo.db.users.update({'email': current_user.email}, {'status': "being_matched"})
+        mongo.db.users.update({'email': current_user.email}, {'$set': {'status': "being_matched"}})
         value = form_groups(mongo.db.users, mongo.db.being_matched, mongo.db.groups)
         print(value)
         if(value):
