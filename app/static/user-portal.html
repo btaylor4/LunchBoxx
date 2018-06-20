@@ -20,7 +20,7 @@
 		<header class="bg-primary text-white ">
 			<div class="container text-center">
 				<h1>LunchBoxx</h1>
-				<p class="lead">Our Snazzy tagline for LunchBoxx</p>
+				<p class="lead">Drop your lunch. Pick up friends.</p>
 			</div>
 		</header>
 
@@ -48,25 +48,43 @@
 				</div>
 			</div>
 			<div class="col-md-6 col-sm-6">
-
 				<div>
 					<h3>Your LunchBoxx</h3>
-					<p>Status: {{status}}</p>
 					<div>
-						{% if status == 'not_matched' %}
-							You are not matched currently
+						<div class="col-md-10">
+							{% if status=='not_matched' %}
+							<p>
+								<strong>You are not matched currently</strong>
+							</p>
 							<a class="btn btn-primary btn-lg" href="/preferences" role="button"> MATCH ME</a>
-						{% elif status == 'being_matched' %}
-							You are being matched
-						{% elif status == 'matched' %}
-							You have been matched!
-						{% else %}
-							An Error has occured. Oops.
-						{% endif %}
+						</div>
+					</div>
+					{% elif status == 'being_matched' %}
+					<p>
+						<strong>
+							You are being matched.
+						</strong>
+					</p>
+					{% elif status == 'matched' %}
+					<p>
+						<strong>You have been matched!</strong>
+					</p>
+					{% else %}
+					<p>
+						<strong>An Error has occured. Oops.</strong>
+					</p>
+					{% endif %}
+				</div>
+				<div class="col-md-10" style="margin-top: 15px">
+					<h3>LunchBoxx Description</h3>
+					<div>
+						<p>
+								Do you ever sit in your cube and wonder if there is anything more to life? Well, no, there isn't. But having friends at lunch can make it better. Meet new people with similar interests and food tastes through the new app LunchBoxx. Set up your profile and times you are free, and we'll match you with a group of new lunch buddies.
+						</p>
 					</div>
 				</div>
 			</div>
 		</div>
-
+	</div>
 	</div>
 </body>
