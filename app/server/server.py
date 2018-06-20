@@ -12,6 +12,7 @@ from User import User
 import places
 import datetime
 from time import time
+from datetime import timedelta, datetime
 
 import json
 from matching_algorithm import form_groups
@@ -92,20 +93,34 @@ def register():
 
             print('form[\'lunch-time\']:', form['lunch-time'])
 
-            now = datetime.datetime.utcnow()
+            now = datetime.utcnow()
 
             print('now:', now)
-
+            
             tempTimeString = now.strftime("%d%m%Y") + " " + form['lunch-time']
+            
 
             print('tempTimeString:', tempTimeString)
 
-            tempTime = datetime.datetime.strptime(
+            tempTime = datetime.strptime(
                 tempTimeString, "%d%m%Y %I:%M %p")
 
+            
             print('tempTime:', tempTime)
 
-            timeDiff = (tempTime-datetime.datetime(1970, 1, 1)).total_seconds()
+            time_diff_datetime = (tempTime-datetime(1970, 1, 1))
+            timeDiff = time_diff_datetime.total_seconds()
+            # If within an hour, sign them up for lunch the next day
+            present = datetime.now()
+
+            print('Timediff float', timeDiff)
+            print('Timediff int', int(timeDiff))
+            if present > (datetime.utcfromtimestamp(timeDiff) - timedelta(hours=1)):
+                timeDiff = timeDiff + 86400
+                print('New timediff', timeDiff)
+
+
+            timeDiff = time_diff_datetime.total_seconds()
 
             print('timeDiff:', timeDiff)
 
@@ -165,10 +180,10 @@ def login():
 def preferences():
     if request.method == 'POST':
 
-        now = datetime.datetime.utcnow()
+        now = datetime.utcnow()
         tempTimeString = now.strftime("%d%m%Y") + " " + request.form['lunch-time']
-        tempTime = datetime.datetime.strptime(tempTimeString, "%d%m%Y %I:%M %p")
-        timeDiff = (tempTime-datetime.datetime(1970,1,1)).total_seconds()
+        tempTime = datetime.strptime(tempTimeString, "%d%m%Y %I:%M %p")
+        timeDiff = (tempTime-datetime(1970,1,1)).total_seconds()
 
 
         mongo.db.being_matched.insert({'email': current_user.email, 'preferences': request.form.getlist('food'), 'time_pref': timeDiff })
@@ -182,7 +197,7 @@ def preferences():
         else:
             return redirect(url_for('matching', time_pref=round(timeDiff)))
 
-    time = datetime.datetime.utcfromtimestamp(current_user.time_pref)
+    time = datetime.utcfromtimestamp(current_user.time_pref)
     time_string = time.strftime("%I:%M %p")
     time_string2 = "'" + time_string + "'"
     print("time_string", time_string)
@@ -226,7 +241,7 @@ def matching():
     print('current_user.time_pref:', current_user.time_pref)
     print('time_pref:', request.args['time_pref'])
     # produce datetime obj from seconds-since-epoch time_pref on current_user (add subtract 30 minutes to get notification time)
-    dateFormatted = datetime.datetime.utcfromtimestamp(
+    dateFormatted = datetime.utcfromtimestamp(
         float(request.args['time_pref']) - 1800.0)
 
     # send current_user's email and formatted time to matching.html
