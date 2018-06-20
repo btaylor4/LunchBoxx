@@ -37,20 +37,20 @@ def load_user(email):
 def register():
     print('hit{}'.format(request.args))
     if request.method == 'POST':
-        
+
         # routing from signup
         if(request.form['nextButton'] == 'create-profile'):
             email = request.form['email']
             password = request.form['password']
-            verify_password = request.form['verify-password'] 
-            
+            verify_password = request.form['verify-password']
+
             hashed_password = generate_password_hash(password, method='sha256')
             # searches the data base for the username chosen
             requested_user = mongo.db.users.find_one({'email': email})
 
             if requested_user is None:
-                
-                if password == verify_password:    
+
+                if password == verify_password:
                     # makes a new user inside data base if non already exits
                     mongo.db.users.insert({'email': email, 'password': hashed_password})
                     return render_template('create-profile.html', email=email, password=password)
@@ -58,7 +58,7 @@ def register():
                     return 'Passwords do not match'
             else:
                 return 'Username has already been taken'
-        
+
         # routing from create profile page
         elif(request.form['nextButton'] == 'done'):
             # create the user
@@ -71,7 +71,7 @@ def register():
             user.last_name = form['lastName']
             user.time_pref = form['lunch-time']
             user.addr = form['address']
-            
+
             # preferences
             if('interests' in form):
                 user.interest_prefs = form['interests']
@@ -83,8 +83,8 @@ def register():
 
             # redirect to the match-me page
             return redirect(url_for('user_portal'))
-            
-    
+
+
     return render_template('sign-up.html')
 
 
@@ -109,7 +109,7 @@ def login():
     return render_template('login.html')
 
 @app.route('/preferences', methods=['GET', 'POST'])
-@login_required    
+@login_required
 def preferences():
     if request.method == 'POST':
         food_preferences = request.form.getlist('food')
@@ -119,10 +119,6 @@ def preferences():
 
     return render_template('preferences.html')
 
-
-@app.route('/home')
-def home():
-    return render_template('home.html')
 
 @app.route('/places', methods=['GET', 'POST'])
 def place():
