@@ -58,48 +58,19 @@
 								<div class="col-md-4 preference">
 									<label for="interests" class="">Interests</label>
 									<select name="interests" class="ui fluid search dropdown" multiple>
-										<option value="angular">Angular</option>
-										<option value="css">CSS</option>
-										<option value="design">Graphic Design</option>
-										<option value="ember">Ember</option>
-										<option value="html">HTML</option>
-										<option value="ia">Information Architecture</option>
-										<option value="javascript">Javascript</option>
-										<option value="mech">Mechanical Engineering</option>
-										<option value="meteor">Meteor</option>
-										<option value="node">NodeJS</option>
-										<option value="plumbing">Plumbing</option>
-										<option value="python">Python</option>
-										<option value="rails">Rails</option>
-										<option value="react">React</option>
-										<option value="repair">Kitchen Repair</option>
-										<option value="ruby">Ruby</option>
-										<option value="ui">UI Design</option>
-										<option value="ux">User Experience</option>
+										{% for interest in interests %}
+											<option value="{{interest}}">{{interest}}</option>
+										{% endfor %}
 									</select>
 								</div>
 
 								<!-- Food -->
 								<div class="col-md-4 preference">
 									<label for="food">Food</label>
-									<select name="food" multiple class="ui fluid dropdown">
-										<option value="italian">Italian</option>
-										<option value="mexican">Mexican</option>
-										<option value="spanish">Spanish</option>
-										<option value="fast-food">Fast Food</option>
-										<option value="bbq">BBQ</option>
-										<option value="japaneese">Korean</option>
-										<option value="vegitarian">vegitarian</option>
-										<option value="backed-goods">Baked Goods</option>
-										<option value="brazilian">Brazilian</option>
-										<option value="korean">Korean</option>
-										<option value="greek">Greek</option>
-										<option value="cuban">Cuban</option>
-										<option value="indian">Indian</option>
-										<option value="caribean">Caribean</option>
-										<option value="latin">Latin</option>
-										<option value="argintinian">Argintinian</option>
-										<option value="breakfast">Breakfast</option>
+									<select name="food" multiple class="ui fluid search dropdown">
+										{% for food in foods %}
+											<option value="{{food}}">{{food}}</option>
+										{% endfor %}
 									</select>
 								</div>
 
