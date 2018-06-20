@@ -13,6 +13,7 @@ import places
 from datetime import datetime
 from time import time
 from datetime import timedelta, datetime
+from places import getLatLong
 
 import json
 from matching_algorithm import form_groups
@@ -131,7 +132,7 @@ def register():
                 return render_template('create-profile.html', email=email, password=password, error='First name can not be empty.', interests=getInterests(), foods=getFoods())
             elif(user.last_name == ''):
                 return render_template('create-profile.html', email=email, password=password, error='Last name can not be empty.', interests=getInterests(), foods=getFoods())
-            elif(user.addr == ''):  # TODO: see if address exits (google maps)
+            elif(user.addr == '' or not getLatLong(user.addr)):  # TODO: see if address exits (google maps)
                 return render_template('create-profile.html', email=email, password=password, error='Address is invalid.', interests=getInterests(), foods=getFoods())
 
             # preferences
@@ -139,9 +140,10 @@ def register():
                 user.interest_prefs = form.getlist('interests')
             if('food' in form):
                 user.food_prefs = form.getlist('food')
-
+    
+            lat, long = getLatLong(user.addr)
             update = {'email': form['email'], 'password': form['password'], 'first_name': user.first_name, 'last_name': user.last_name, 'time_pref': user.time_pref, 'addr': user.addr,
-                      'interest_prefs': user.interest_prefs, 'food_prefs': user.food_prefs, 'status': "not_matched"}
+                      'interest_prefs': user.interest_prefs, 'food_prefs': user.food_prefs, 'lat': lat, 'long':long, 'status': "not_matched"}
 
             # find and update user
             mongo.db.users.insert(update)

@@ -8,6 +8,8 @@ class User(object):
         self.food_prefs = []
         self.time_pref = ''
         self.addr = ''
+        self.lat = 0.0
+        self.long = 0.0
         self.status = 'not matched'
 
     def is_authenticated(self):
@@ -30,5 +32,7 @@ class User(object):
         self.interest_prefs = db_user['interest_prefs']
         self.food_prefs = db_user['food_prefs']
         self.time_pref = db_user['time_pref']
+        self.lat = db_user['lat']
+        self.long = db_user['long']
         self.status = db_user['status']
         return self
