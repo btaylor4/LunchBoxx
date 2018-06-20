@@ -170,7 +170,7 @@ def preferences():
         tempTime = datetime.datetime.strptime(tempTimeString, "%d%m%Y %I:%M %p")
         timeDiff = (tempTime-datetime.datetime(1970,1,1)).total_seconds()
 
-        
+
         mongo.db.being_matched.insert({'email': current_user.email, 'preferences': request.form.getlist('food'), 'time_pref': timeDiff })
         mongo.db.users.update({'email': current_user.email}, {'$set': {'status': "being_matched"}})
         value = form_groups(mongo.db.users, mongo.db.being_matched, mongo.db.groups)
@@ -215,8 +215,10 @@ def index():  # TODO: Check if user is logged in
 
 
 @app.route("/user-portal")
+@login_required
 def user_portal():
-    return render_template("user-portal.html")
+	print("Current user as seen from User Portal Route:: ", current_user)
+	return render_template("user-portal.html", status=current_user.status)
 
 
 @app.route("/matching")
