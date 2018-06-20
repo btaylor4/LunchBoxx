@@ -124,7 +124,7 @@ def form_groups(users_collection, being_matched_collection, group_collection):
                     {'email': {'$in': group_emails}})
                 print(stats)
                 users_collection.update({'email': {'$in': group_emails}}, {
-                                        '$set': {'status': "matched"}}, {'multi': 'true'})
+                                        '$set': {'status': "matched"}}, upsert=True, multi=True)
 
     return formed_groups
 
