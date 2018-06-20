@@ -8,6 +8,7 @@ class User(object):
         self.food_prefs = []
         self.time_pref = ''
         self.addr = ''
+        self.status = 'not matched'
 
     def is_authenticated(self):
         return True
@@ -29,4 +30,5 @@ class User(object):
         # self.interest_prefs = db_user['interest_prefs']
         self.food_prefs = db_user['food_prefs']
         self.time_pref = db_user['time_pref']
+        self.status = db_user['match_status']
         return self
