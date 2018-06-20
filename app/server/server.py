@@ -12,6 +12,7 @@ from User import User
 import places
 from datetime import datetime
 from time import time
+from datetime import timedelta, datetime
 
 import json
 from matching_algorithm import form_groups
@@ -95,17 +96,31 @@ def register():
             now = datetime.utcnow()
 
             print('now:', now)
-
+            
             tempTimeString = now.strftime("%d%m%Y") + " " + form['lunch-time']
+            
 
             print('tempTimeString:', tempTimeString)
 
             tempTime = datetime.strptime(
                 tempTimeString, "%d%m%Y %I:%M %p")
 
+            
             print('tempTime:', tempTime)
 
-            timeDiff = (tempTime-datetime(1970, 1, 1)).total_seconds()
+            time_diff_datetime = (tempTime-datetime(1970, 1, 1))
+            timeDiff = time_diff_datetime.total_seconds()
+            # If within an hour, sign them up for lunch the next day
+            present = datetime.now()
+
+            print('Timediff float', timeDiff)
+            print('Timediff int', int(timeDiff))
+            if present > (datetime.utcfromtimestamp(timeDiff) - timedelta(hours=1)):
+                timeDiff = timeDiff + 86400
+                print('New timediff', timeDiff)
+
+
+            timeDiff = time_diff_datetime.total_seconds()
 
             print('timeDiff:', timeDiff)
 
