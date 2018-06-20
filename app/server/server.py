@@ -10,7 +10,7 @@ import os
 import json
 from User import User
 import places
-import datetime
+from datetime import datetime
 from time import time
 
 import json
@@ -92,7 +92,7 @@ def register():
 
             print('form[\'lunch-time\']:', form['lunch-time'])
 
-            now = datetime.datetime.utcnow()
+            now = datetime.utcnow()
 
             print('now:', now)
 
@@ -100,12 +100,12 @@ def register():
 
             print('tempTimeString:', tempTimeString)
 
-            tempTime = datetime.datetime.strptime(
+            tempTime = datetime.strptime(
                 tempTimeString, "%d%m%Y %I:%M %p")
 
             print('tempTime:', tempTime)
 
-            timeDiff = (tempTime-datetime.datetime(1970, 1, 1)).total_seconds()
+            timeDiff = (tempTime-datetime(1970, 1, 1)).total_seconds()
 
             print('timeDiff:', timeDiff)
 
@@ -128,7 +128,7 @@ def register():
             if('food' in form):
                 user.food_prefs = form.getlist('food')
             update = {'first_name': user.first_name, 'last_name': user.last_name, 'time_pref': user.time_pref, 'addr': user.addr,
-                      'interest_prefs': user.interest_prefs, 'food_prefs': user.food_prefs, 'status': "not matched"}
+                      'interest_prefs': user.interest_prefs, 'food_prefs': user.food_prefs, 'status': "not_matched"}
 
             # find and update user
             mongo.db.users.update_one({'email': user.email}, {'$set': update})
@@ -165,10 +165,10 @@ def login():
 def preferences():
     if request.method == 'POST':
 
-        now = datetime.datetime.utcnow()
+        now = datetime.utcnow()
         tempTimeString = now.strftime("%d%m%Y") + " " + request.form['lunch-time']
-        tempTime = datetime.datetime.strptime(tempTimeString, "%d%m%Y %I:%M %p")
-        timeDiff = (tempTime-datetime.datetime(1970,1,1)).total_seconds()
+        tempTime = datetime.strptime(tempTimeString, "%d%m%Y %I:%M %p")
+        timeDiff = (tempTime-datetime(1970,1,1)).total_seconds()
 
 
         mongo.db.being_matched.insert({'email': current_user.email, 'preferences': request.form.getlist('food'), 'time_pref': timeDiff })
@@ -182,7 +182,7 @@ def preferences():
         else:
             return redirect(url_for('matching', time_pref=round(timeDiff)))
 
-    time = datetime.datetime.utcfromtimestamp(current_user.time_pref)
+    time = datetime.utcfromtimestamp(current_user.time_pref)
     time_string = time.strftime("%I:%M %p")
     time_string2 = "'" + time_string + "'"
     print("time_string", time_string)
@@ -217,16 +217,32 @@ def index():  # TODO: Check if user is logged in
 @app.route("/user-portal")
 @login_required
 def user_portal():
-	print("Current user as seen from User Portal Route:: ", current_user)
-	return render_template("user-portal.html", status=current_user.status)
 
+	return render_template("user-portal.html", status=current_user.status, user=getUserDict())
+
+
+def getUserDict():
+	u = {}
+	for attr, value in current_user.__dict__.items():
+		propertyName = attr.replace("_", " ").title()
+		property = value
+
+		if isinstance(value, list):
+			property = " ".join(value)
+		u[propertyName] = property
+
+	del u['Password']
+
+	# u['Time Pref'] = datetime.strptime(u['Time Pref'])
+
+	return u
 
 @app.route("/matching")
 def matching():
     print('current_user.time_pref:', current_user.time_pref)
     print('time_pref:', request.args['time_pref'])
     # produce datetime obj from seconds-since-epoch time_pref on current_user (add subtract 30 minutes to get notification time)
-    dateFormatted = datetime.datetime.utcfromtimestamp(
+    dateFormatted = datetime.utcfromtimestamp(
         float(request.args['time_pref']) - 1800.0)
 
     # send current_user's email and formatted time to matching.html
