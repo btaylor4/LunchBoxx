@@ -14,7 +14,7 @@ import datetime
 from time import time
 
 import json
-
+from matching_algorithm import form_groups
 
 from being_matched import BeingMatched
 
@@ -127,15 +127,17 @@ def register():
                 user.interest_prefs = form.getlist('interests')
             if('food' in form):
                 user.food_prefs = form.getlist('food')
-            update = {'first_name':user.first_name, 'last_name':user.last_name, 'time_pref':user.time_pref, 'addr':user.addr, 'interest_prefs':user.interest_prefs, 'food_prefs':user.food_prefs}
+            update = {'first_name': user.first_name, 'last_name': user.last_name, 'time_pref': user.time_pref, 'addr': user.addr,
+                      'interest_prefs': user.interest_prefs, 'food_prefs': user.food_prefs, 'status': "not matched"}
 
             # find and update user
             mongo.db.users.update_one({'email': user.email}, {'$set': update})
 
+
             # redirect to the login page
             return redirect(url_for('login'))
         elif(request.form['nextButton'] == 'back'):
-            return redirect(url_for('register'))
+            return redirect(url_for('login'))
 
     return render_template('sign-up.html', hidden='hidden')
 
@@ -157,20 +159,28 @@ def login():
 
     return render_template('login.html', hidden='hidden')
 
+
 @app.route('/preferences', methods=['GET', 'POST'])
 @login_required
 def preferences():
     if request.method == 'POST':
-        food_preferences = request.form.getlist('food')
-        mongo.db.being_matched.insert({'email': current_user.email, 'preferences': food_preferences, 'time_pref': current_user.time_pref })
-        now = datetime.datetime.utcnow()
 
+        now = datetime.datetime.utcnow()
         tempTimeString = now.strftime("%d%m%Y") + " " + request.form['lunch-time']
         tempTime = datetime.datetime.strptime(tempTimeString, "%d%m%Y %I:%M %p")
         timeDiff = (tempTime-datetime.datetime(1970,1,1)).total_seconds()
 
-        return redirect(url_for('matching', time_pref=round(timeDiff)))
-
+        
+        mongo.db.being_matched.insert({'email': current_user.email, 'preferences': request.form.getlist('food'), 'time_pref': timeDiff })
+        mongo.db.users.update({'email': current_user.email}, {'$set': {'status': "being_matched"}})
+        value = form_groups(mongo.db.users, mongo.db.being_matched, mongo.db.groups)
+        print(value)
+        if(value):
+            # Return to bryan's page
+            return "You were matched"
+            pass
+        else:
+            return redirect(url_for('matching', time_pref=round(timeDiff)))
 
     time = datetime.datetime.utcfromtimestamp(current_user.time_pref)
     time_string = time.strftime("%I:%M %p")
@@ -183,11 +193,14 @@ def preferences():
 @app.route('/places', methods=['GET', 'POST'])
 def place():
 	print("I AM IN PLACE YO")
-	food_type = 'italian'
-	coord = (26.0895906,-80.3669549)
-	resp = places.getNearbyPlaces(food_type, coord)
+	# food_type = 'italian'
+	# coord = (26.0895906,-80.3669549)
+	# resp = places.getNearbyPlaces(food_type, coord)
+	# print("The top restaurant is: ", resp)
 
-	print("The top restaurant is: ", resp)
+	location = 'I AM NOT REAL YO'
+	resp = places.getLatLong(location)
+	print("The lat and long is:", resp)
 	return
 
 @app.route("/logout")
@@ -197,7 +210,7 @@ def logout():
 
 
 @app.route("/")
-def index(): # TODO: Check if user is logged in
+def index():  # TODO: Check if user is logged in
     return redirect(url_for("login"))
 
 
@@ -211,7 +224,8 @@ def matching():
     print('current_user.time_pref:', current_user.time_pref)
     print('time_pref:', request.args['time_pref'])
     # produce datetime obj from seconds-since-epoch time_pref on current_user (add subtract 30 minutes to get notification time)
-    dateFormatted = datetime.datetime.utcfromtimestamp(float(request.args['time_pref']) - 1800.0)
+    dateFormatted = datetime.datetime.utcfromtimestamp(
+        float(request.args['time_pref']) - 1800.0)
 
     # send current_user's email and formatted time to matching.html
     return render_template("matching.html", time=(dateFormatted.strftime('%I:%M %p')))
