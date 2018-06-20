@@ -13,6 +13,8 @@ import places
 import datetime
 from time import time
 
+from matching_algorithm import form_groups
+
 from being_matched import BeingMatched
 
 app = Flask(__name__, static_folder="../static", template_folder="../static")
@@ -113,10 +115,11 @@ def register():
             if('food' in form):
                 user.food_prefs = form.getlist('food')
             update = {'first_name': user.first_name, 'last_name': user.last_name, 'time_pref': user.time_pref, 'addr': user.addr,
-                      'interest_prefs': user.interest_prefs, 'food_prefs': user.food_prefs, 'match_status': "not matched"}
+                      'interest_prefs': user.interest_prefs, 'food_prefs': user.food_prefs, 'status': "not matched"}
 
             # find and update user
             mongo.db.users.update_one({'email': user.email}, {'$set': update})
+
 
             # redirect to the login page
             return redirect(url_for('login'))
@@ -148,20 +151,23 @@ def login():
 @login_required
 def preferences():
     if request.method == 'POST':
-        food_preferences = request.form.getlist('food')
-        mongo.db.being_matched.updateOne({'email': current_user.email}, {
-                                         "$set": {"match_status": "matching"}})
-        mongo.db.being_matched.insert(
-            {'email': current_user.email, 'preferences': food_preferences, 'time_pref': current_user.time_pref})
+
         now = datetime.datetime.utcnow()
+        tempTimeString = now.strftime("%d%m%Y") + " " + request.form['lunch-time']
+        tempTime = datetime.datetime.strptime(tempTimeString, "%d%m%Y %I:%M %p")
+        timeDiff = (tempTime-datetime.datetime(1970,1,1)).total_seconds()
 
-        tempTimeString = now.strftime(
-            "%d%m%Y") + " " + request.form['lunch-time']
-        tempTime = datetime.datetime.strptime(
-            tempTimeString, "%d%m%Y %I:%M %p")
-        timeDiff = (tempTime-datetime.datetime(1970, 1, 1)).total_seconds()
-
-        return redirect(url_for('matching', time_pref=round(timeDiff)))
+        
+        mongo.db.being_matched.insert({'email': current_user.email, 'preferences': request.form.getlist('food'), 'time_pref': timeDiff })
+        mongo.db.users.update({'email': current_user.email}, {'status': "being_matched"})
+        value = form_groups(mongo.db.users, mongo.db.being_matched, mongo.db.groups)
+        print(value)
+        if(value):
+            # Return to bryan's page
+            return "You were matched"
+            pass
+        else:
+            return redirect(url_for('matching', time_pref=round(timeDiff)))
 
     time = datetime.datetime.utcfromtimestamp(current_user.time_pref)
     time_string = time.strftime("%I:%M %p")
