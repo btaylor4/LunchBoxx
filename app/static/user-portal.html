@@ -2,89 +2,92 @@
 <html lang="en">
 
 <head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-	<title>LunchBoxx</title>
+    <title>LunchBoxx</title>
 
-	<link rel="shortcut icon" type="image/png" href="{{ url_for('static',filename='img/favicon.ico') }}" />
-	<link href="{{ url_for('static',filename='css/bootstrap.min.css') }}" rel="stylesheet" type='text/css'>
-	<link href="{{ url_for('static',filename='css/style.css') }}" rel="stylesheet" type='text/css'>
+    <link rel="shortcut icon" type="image/png" href="{{ url_for('static',filename='img/favicon.ico') }}" />
+    <link href="{{ url_for('static',filename='css/bootstrap.min.css') }}" rel="stylesheet" type='text/css'>
+    <link href="{{ url_for('static',filename='css/style.css') }}" rel="stylesheet" type='text/css'>
 
 </head>
 
 <body>
-	<div class="container">
+    <div class="container">
 
-		<header class="bg-primary text-white ">
-			<div class="container text-center">
-				<h1>LunchBoxx</h1>
-				<p class="lead">Drop your lunch. Pick up friends.</p>
-			</div>
-		</header>
+        <header class="bg-primary text-white ">
+            <div class="container text-center">
+                <h1>LunchBoxx</h1>
+                <p class="lead">Drop your lunch. Pick up friends.</p>
+            </div>
+        </header>
 
-		<div class="row">
-			<div class="col-md-6 col-sm-6">
-				<div>
-					<h3> Your Profile Details </h3>
+        <div class="row">
+            <div class="col-md-6 col-sm-6">
+                <div>
+                    <h3> Your Profile Details </h3>
 
-					<table class="table">
-						<thead>
-							<th>Prop</th>
-							<th>Thing</th>
-						</thead>
-						<tbody>
-							{% for attr, value in user.items() %}
-							<tr>
-								<td>{{attr}}</td>
-								<td>{{value}}</td>
-							</tr>
-							{% endfor %}
+                    <table class="table">
+                        <thead>
+                            <th>Prop</th>
+                            <th>Thing</th>
+                        </thead>
+                        <tbody>
+                            {% for attr, value in user.items() %}
+                            <tr>
+                                <td>{{attr}}</td>
+                                <td>{{value}}</td>
+                            </tr>
+                            {% endfor %}
 
-						</tbody>
-					</table>
+                        </tbody>
+                    </table>
 
-				</div>
-			</div>
-			<div class="col-md-6 col-sm-6">
-				<div>
-					<h3>Your LunchBoxx</h3>
-					<div>
-						<div class="col-md-10">
-							{% if status=='not_matched' %}
-							<p>
-								<strong>You are not matched currently</strong>
-							</p>
-							<a class="btn btn-primary btn-lg" href="/preferences" role="button"> MATCH ME</a>
-						</div>
-					</div>
-					{% elif status == 'being_matched' %}
-					<p>
-						<strong>
-							You are being matched.
-						</strong>
-					</p>
-					{% elif status == 'matched' %}
-					<p>
-						<strong>You have been matched!</strong>
-					</p>
-					{% else %}
-					<p>
-						<strong>An Error has occured. Oops.</strong>
-					</p>
-					{% endif %}
-				</div>
-				<div class="col-md-10" style="margin-top: 15px">
-					<h3>LunchBoxx Description</h3>
-					<div>
-						<p>
-								Do you ever sit in your cube and wonder if there is anything more to life? Well, no, there isn't. But having friends at lunch can make it better. Meet new people with similar interests and food tastes through the new app LunchBoxx. Set up your profile and times you are free, and we'll match you with a group of new lunch buddies.
-						</p>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	</div>
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-6">
+                <div>
+                    <h3>Your LunchBoxx</h3>
+                    <div>
+                        <div class="col-md-10">
+                            {% if status=='not_matched' %}
+                            <p>
+                                <strong>You are not matched currently</strong>
+                            </p>
+                            <a class="btn btn-primary btn-lg" href="/preferences" role="button"> MATCH ME</a>
+                        </div>
+                    </div>
+                    {% elif status == 'being_matched' %}
+                    <p>
+                        <strong>
+                            You are being matched.
+                        </strong>
+                    </p>
+                    {% elif status == 'matched' %}
+                    <p>
+                        <strong>You have been matched!</strong>
+                    </p>
+                    {% else %}
+                    <p>
+                        <strong>An Error has occured. Oops.</strong>
+                    </p>
+                    {% endif %}
+                </div>
+                <div class="col-md-10" style="margin-top: 15px">
+                    <h3>About LunchBoxx</h3>
+                    <div>
+                        <p>
+                            Do you ever sit in your cube and wonder if there is anything more to life? Well, no, there isn't. But having friends at lunch
+                            can make it better. Meet new people with similar interests and food tastes through the new app
+                            LunchBoxx. Set up your profile and times you are free, and we'll match you with a group of new
+                            lunch buddies.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
 </body>
