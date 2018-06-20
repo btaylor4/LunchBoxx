@@ -15,3 +15,7 @@ body {
 .form-group.last {
   margin-bottom: 0px;
 }
+
+.hidden {
+    display: "none";
+}
