@@ -16,6 +16,8 @@ def findFriends(user, pool, friends, accepted_foods, count):
     if(friend==None):
         return []
 
+    print('heres the pool: ' + pool)
+
     # add friend to friend list
     pool.remove(friend)
     friends.append(friend)
@@ -92,6 +94,8 @@ def form_groups(users_collection, being_matched_collection, group_collection):
             chosen_user, pool, [chosen_user], accepted_foods, FRIEND_COUNT)
         friends.append(chosen_user)
 
+        print('this is your new friendgroup: ' + friends)
+
         if(friends != None):
 
             # re-add the users back to the pool if there weren't enough matched
@@ -112,8 +116,9 @@ def form_groups(users_collection, being_matched_collection, group_collection):
                 group_collection.insert({'emails': group_emails}) # TODO: grab restaurant time preference
                 stats = being_matched_collection.remove({'email': {'$in': group_emails}})
                 print(stats)
-                users_collection.update({'email': {'$in': group_emails}}, {'$set': {'status': "matched"}})                                
-
+                stats =users_collection.update({'email': {'$in': group_emails}}, {'$set': {'status': "matched"}})                                
+                print(stats)
+                
     return formed_groups
         
 
