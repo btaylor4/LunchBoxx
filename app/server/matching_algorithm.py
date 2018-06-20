@@ -1,8 +1,26 @@
 from group import Group
 from geopy import distance
+from places import getNearbyPlaces
 
 MATCH_RANGE = 5 # miles
 FRIEND_COUNT = 5
+
+def getCoord(locations):
+    print('locations:', locations)
+    latAvg = 0
+    longAvg = 0
+    latTotal = 0
+    longTotal = 0
+
+    for location in locations:
+        latTotal += location[0]
+        longTotal += location[1]
+    
+    latAvg = latTotal/len(locations)
+    longAvg = longTotal/len(locations)
+
+    return (latAvg, longAvg)
+
 
 # recursively find friends
 def findFriends(user, pool, friends, accepted_foods, count):
@@ -82,21 +100,30 @@ def form_groups(users_collection, being_matched_collection, group_collection):
             else:
                 # generate the groups emails
                 group_emails = []
+                locations = []
                 for user in friends:
                     group_emails.append(user['email'])
 
                 # create a new group
-                group = Group(group_emails[:5])
+                group = Group(group_emails[:FRIEND_COUNT])
                 formed_groups.append(group)
 
+                for user in friends:
+                    locations.append((user['lat'], user['long']))
+
                 # fix databases
-                group_collection.insert({'emails': group_emails}) # TODO: grab restaurant time preference
-                being_matched_collection.remove({'email': {'$in': group_emails}})
-                users_collection.update({'email': {'$in': group_emails}}, {'$set': {'status': "matched"}})
+                print(group_emails)
+                print(locations)
+                print(getCoord(locations))
+
+                group_collection.insert({'emails': group_emails[:FRIEND_COUNT], 'restaurant': getNearbyPlaces('italian', getCoord(locations[:FRIEND_COUNT])), 'time': user['time_pref']})
+
+                stats = being_matched_collection.remove({'email': {'$in': group_emails}})
+                print(stats)
+                users_collection.update({'email': {'$in': group_emails}}, {'$set': {'status': "matched"}})                                
 
     return formed_groups
         
-
     '''
     for index in range(0, len(users), 5):
         grouped_users = (users[index:index+5])

@@ -195,8 +195,7 @@ def preferences():
         print(value)
         if(value):
             # Return to bryan's page
-            return "You were matched"
-            pass
+            return redirect(url_for('user_portal'))
         else:
             return redirect(url_for('matching', time_pref=round(timeDiff)))
 
