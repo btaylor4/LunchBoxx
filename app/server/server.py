@@ -118,7 +118,8 @@ def register():
 
             # redirect to the login page
             return redirect(url_for('login'))
-
+        elif(request.form['nextButton'] == 'back'):
+            return redirect(url_for('register'))
 
     return render_template('sign-up.html', hidden='hidden')
 
