@@ -2,48 +2,48 @@
 <html lang="en">
 
 <head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-	<title>LunchBoxx</title>
+    <title>LunchBoxx</title>
 
-	<link rel="shortcut icon" type="image/png" href="{{ url_for('static',filename='img/favicon.ico') }}" />
-	<link href="{{ url_for('static',filename='css/bootstrap.min.css') }}" rel="stylesheet" type='text/css'>
-	<link href="{{ url_for('static',filename='css/style.css') }}" rel="stylesheet" type='text/css'>
+    <link rel="shortcut icon" type="image/png" href="{{ url_for('static',filename='img/favicon.ico') }}" />
+    <link href="{{ url_for('static',filename='css/bootstrap.min.css') }}" rel="stylesheet" type='text/css'>
+    <link href="{{ url_for('static',filename='css/style.css') }}" rel="stylesheet" type='text/css'>
 
 </head>
 
 <body>
-	<div class="container">
+    <div class="container">
 
-		<header class="bg-primary text-white ">
-			<div class="container text-center">
-				<h1>LunchBoxx</h1>
-				<p class="lead">Drop your lunch. Pick up friends.</p>
-			</div>
-		</header>
+        <header class="bg-primary text-white ">
+            <div class="container text-center">
+                <h1>LunchBoxx</h1>
+                <p class="lead">Drop your lunch. Pick up friends.</p>
+            </div>
+        </header>
 
-		<div class="row">
-			<div class="col-md-6 col-sm-6">
-				<div>
-					<h3> Your Profile Details </h3>
+        <div class="row">
+            <div class="col-md-6 col-sm-6">
+                <div>
+                    <h3> Your Profile Details </h3>
 
-					<table class="table">
-						<thead>
-							<th>Prop</th>
-							<th>Thing</th>
-						</thead>
-						<tbody>
-							{% for attr, value in user.items() %}
-							<tr>
-								<td>{{attr}}</td>
-								<td>{{value}}</td>
-							</tr>
-							{% endfor %}
+                    <table class="table">
+                        <thead>
+                            <th>Prop</th>
+                            <th>Thing</th>
+                        </thead>
+                        <tbody>
+                            {% for attr, value in user.items() %}
+                            <tr>
+                                <td>{{attr}}</td>
+                                <td>{{value}}</td>
+                            </tr>
+                            {% endfor %}
 
-						</tbody>
-					</table>
+                        </tbody>
+                    </table>
 
 				</div>
 			</div>

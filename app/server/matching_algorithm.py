@@ -35,19 +35,19 @@ def findMatch(user, pool, accepted_foods):
     for other_user in pool:    
 
         # if the user has the same time
-        if(user.time_pref == other_user.time_pref):
+        if(user['time_pref'] == other_user['time_pref']):
     
             # make sure addresses are in 5 mile range
-            if(distance.distance((user.lat, user.long), (other_user.lat, other_user.long)).miles < MATCH_RANGE):
+            if(distance.distance((user['lat'], user['long']), (other_user['lat'], other_user['long'])).miles < MATCH_RANGE):
     
                 # make sure the people like the same food
                 common_foods = list(
-                    set(accepted_foods).intersection(other_user.food_prefs))
+                    set(accepted_foods).intersection(other_user['food_prefs']))
 
                 # move on if common foods were found
                 if(len(common_foods) > 0):
     
-                    common_interests = list(set(user.interest_prefs).intersection(other_user.interest_prefs))
+                    common_interests = list(set(user['interest_prefs']).intersection(other_user['interest_prefs']))
 
                     if(len(common_interests) > 0):
                         # accept the common foods
@@ -75,8 +75,9 @@ def form_groups(users_collection, being_matched_collection, group_collection):
         for element in chosen_user:
             print(element)
     
+        accepted_foods = []
         friends = findFriends(
-            chosen_user, pool, [chosen_user], [chosen_user.food_prefs], FRIEND_COUNT)
+            chosen_user, pool, [chosen_user], accepted_foods, FRIEND_COUNT)
 
         print('found friends: ' + friends)
 
@@ -88,7 +89,7 @@ def form_groups(users_collection, being_matched_collection, group_collection):
             # generate the groups emails
             group_emails = []
             for user in friends:
-                group_emails.append(user.email)
+                group_emails.append(user['email'])
 
             # create a new group
             group = Group(group_emails)
@@ -96,7 +97,7 @@ def form_groups(users_collection, being_matched_collection, group_collection):
 
             # fix databases
             print(group_emails)
-            group_collection.insert({'emails': group_emails})
+            group_collection.insert({'emails': group_emails}) # TODO: grab restaurant time preference
             stats = being_matched_collection.remove({'email': {'$in': group_emails}})
             print(stats)
             users_collection.update({'email': {'$in': group_emails}}, {'$set': {'status': "matched"}})                                
