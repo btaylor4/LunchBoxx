@@ -75,17 +75,25 @@ def register():
             user = User(email)
 
 
-            now = datetime.datetime.now()
+            print('form[\'lunch-time\']:', form['lunch-time'])
 
-            tempTimeString = now.strftime("%d%m%Y") + form['lunch-time']
+            now = datetime.datetime.utcnow()
 
-            tempTime = datetime.datetime.strptime(tempTimeString, "%d%m%Y%I:%M %p")
+            print('now:', now)
+
+            tempTimeString = now.strftime("%d%m%Y") + " " + form['lunch-time']
+
+            print('tempTimeString:', tempTimeString)
+
+            tempTime = datetime.datetime.strptime(tempTimeString, "%d%m%Y %I:%M %p")
+
+            print('tempTime:', tempTime)
 
             timeDiff = (tempTime-datetime.datetime(1970,1,1)).total_seconds() 
-        
 
-            # setup the user
-            user.password = password
+            print((tempTime-datetime.datetime(1970,1,1)))
+            
+            print('timeDiff:',timeDiff)
 
             user.first_name = form['firstName']
             user.last_name = form['lastName']
@@ -140,14 +148,12 @@ def preferences():
     if request.method == 'POST':
         food_preferences = request.form.getlist('food')
         mongo.db.being_matched.insert({'email': current_user.email, 'preferences': food_preferences, 'time_pref': current_user.time_pref })
+        return redirect(url_for('matching'))
 
         # TODO Return template for 'YOU'RE BEING MATCHED'
 
     time = datetime.datetime.utcfromtimestamp(current_user.time_pref)
-
-
     time_string = time.strftime("%I:%M %p")
-
     return render_template('preferences.html', preference_list=current_user.food_prefs, time=time_string)
 
 
@@ -181,22 +187,14 @@ def user_portal():
     return render_template("user-portal.html")
 
 
-@app.route("/matched")
-def match():
-    # TODO: remove, testing stuff
+@app.route("/matching")
+def matching():
     print('current_user.time_pref:', current_user.time_pref)
-    print('current_user.email:', current_user.email)
-
-    sec = int(round(time()))
-    print('sec:', sec)
-    dateFormattedTest = datetime.datetime.fromtimestamp(sec-1800)
-    print('dateFormattedTest:', dateFormattedTest)
-
     # produce datetime obj from seconds-since-epoch time_pref on current_user (add subtract 30 minutes to get notification time)
-    dateFormatted = datetime.datetime.fromtimestamp(float(current_user.time_pref) - 1800)
+    dateFormatted = datetime.datetime.utcfromtimestamp(float(current_user.time_pref) - 1800.0)
 
     # send current_user's email and formatted time to matching.html
-    return render_template("matching.html", email=current_user.email, time=dateFormatted.strftime('%I:%M %p'))
+    return render_template("matching.html", time=(dateFormatted.strftime('%I:%M %p')))
 
 
 if __name__ == "__main__":
