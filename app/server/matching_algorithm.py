@@ -1,6 +1,7 @@
 from group import Group
 from geopy import distance
 from places import getNearbyPlaces
+import random
 
 MATCH_RANGE = 5  # miles
 FRIEND_COUNT = 5
@@ -118,7 +119,7 @@ def form_groups(users_collection, being_matched_collection, group_collection):
                 print(getCoord(locations))
 
                 group_collection.insert({'emails': group_emails[:FRIEND_COUNT], 'restaurant': getNearbyPlaces(
-                    'italian', getCoord(locations[:FRIEND_COUNT])), 'time': user['time_pref']})
+                    random.choice(accepted_foods), getCoord(locations[:FRIEND_COUNT])), 'time': user['time_pref']})
 
                 stats = being_matched_collection.remove(
                     {'email': {'$in': group_emails}})
