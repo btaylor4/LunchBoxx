@@ -148,13 +148,16 @@ def preferences():
     if request.method == 'POST':
         food_preferences = request.form.getlist('food')
         mongo.db.being_matched.insert({'email': current_user.email, 'preferences': food_preferences, 'time_pref': current_user.time_pref })
-        return redirect(url_for('matching'))
+        return redirect(url_for('matching', time_pref='1529458560'))
 
         # TODO Return template for 'YOU'RE BEING MATCHED'
 
     time = datetime.datetime.utcfromtimestamp(current_user.time_pref)
     time_string = time.strftime("%I:%M %p")
-    return render_template('preferences.html', preference_list=current_user.food_prefs, time=time_string)
+    time_string2 = "'" + time_string + "'"
+    print("time_string", time_string)
+    print("time_string2", time_string2)
+    return render_template('preferences.html', preference_list=current_user.food_prefs, time_pref=time_string2)
 
 
 @app.route('/home')
@@ -190,8 +193,9 @@ def user_portal():
 @app.route("/matching")
 def matching():
     print('current_user.time_pref:', current_user.time_pref)
+    print('time_pref:', request.args['time_pref'])
     # produce datetime obj from seconds-since-epoch time_pref on current_user (add subtract 30 minutes to get notification time)
-    dateFormatted = datetime.datetime.utcfromtimestamp(float(current_user.time_pref) - 1800.0)
+    dateFormatted = datetime.datetime.utcfromtimestamp(float(request.args['time_pref']) - 1800.0)
 
     # send current_user's email and formatted time to matching.html
     return render_template("matching.html", time=(dateFormatted.strftime('%I:%M %p')))

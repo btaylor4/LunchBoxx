@@ -48,9 +48,9 @@
                                             <option value="11:30 AM">11:30 AM</option>
                                             <option value="12:00 PM">12:00 PM</option>
                                             <option value="12:30 PM">12:30 PM</option>
-                                            <option value="1:00 PM">1:00 PM</option>
-                                            <option value="1:30 PM">1:30 PM</option>
-                                            <option value="2:00 PM">2:00 PM</option>
+                                            <option value="01:00 PM">01:00 PM</option>
+                                            <option value="01:30 PM">01:30 PM</option>
+                                            <option value="02:00 PM">02:00 PM</option>
                                         </select>
                                     </div>
                                 </div>
@@ -91,7 +91,7 @@
     </div>
 
     <script>
-        $(".ui.time.dropdown").dropdown('set selected', "{{time}}");
+        $(".ui.time.dropdown").dropdown('set selected', {{time_pref|safe}});
         $(".ui.food.dropdown").dropdown('set selected', {{preference_list|safe}});
     </script>
     <script src="{{ url_for('static',filename='dist/bundle.js') }}" type="text/javascript"></script>
