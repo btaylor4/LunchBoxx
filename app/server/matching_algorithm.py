@@ -16,8 +16,6 @@ def findFriends(user, pool, friends, accepted_foods, count):
     if(friend==None):
         return []
 
-    print('heres the pool: ' + pool)
-
     # add friend to friend list
     pool.remove(friend)
     friends.append(friend)
@@ -35,35 +33,23 @@ def findMatch(user, pool, accepted_foods):
     # for the user, get all users that match the user the most
     for other_user in pool:    
 
-        print(user['email'] + ' is searching if ' + other_user['email'] + ' is compatible')
-
         # if the user has the same time
         if(user['time_pref'] == other_user['time_pref']):
-        
-            print(user['email'] + ' has the same time preferenc')
-            
+                    
             # make sure addresses are in 5 mile range
             if(distance.distance((user['lat'], user['long']), (other_user['lat'], other_user['long'])).miles < MATCH_RANGE):
         
-                print(user['email'] + ' found someone in distance range')
-                print('here are your accepted foods: ' + ', '.join(accepted_foods))
-                print('here the others accepted foods: ' + ', '.join(other_user['food_prefs']))
                 # make sure the people like the same food
                 common_foods = list(
                     set(accepted_foods).intersection(other_user['food_prefs']))
-                print('here are the common foods: ' + ', '.join(common_foods))
-
+    
                 # move on if common foods were found
                 if(len(common_foods) > 0):
     
-                    print(user['email'] + ' found someone common foods')
-                    
                     common_interests = list(set(user['interest_prefs']).intersection(other_user['interest_prefs']))
 
                     if(len(common_interests) > 0):
-                        
-                        print(user['email'] + ' found someone with common interests')
-                        
+                                                
                         # accept the common foods
                         accepted_foods = common_foods
                         
@@ -74,9 +60,7 @@ def findMatch(user, pool, accepted_foods):
 # form groups
 def form_groups(users_collection, being_matched_collection, group_collection):
     usersCursor = being_matched_collection.find()
-    print('BS')
     pool = list(usersCursor)
-    print('Users', pool)
 
     # create the list of formed groups to be returned
     formed_groups = []
@@ -84,17 +68,11 @@ def form_groups(users_collection, being_matched_collection, group_collection):
     while(len(pool) >= FRIEND_COUNT):
         # create lists to fill out
         chosen_user = pool.pop()
-
-        print('chosen user: ')
-        for element in chosen_user:
-            print(element)
     
         accepted_foods = chosen_user['food_prefs']
         friends = findFriends(
             chosen_user, pool, [chosen_user], accepted_foods, FRIEND_COUNT)
         friends.append(chosen_user)
-
-        print('this is your new friendgroup: ' + friends)
 
         if(friends != None):
 
@@ -108,17 +86,14 @@ def form_groups(users_collection, being_matched_collection, group_collection):
                     group_emails.append(user['email'])
 
                 # create a new group
-                group = Group(group_emails)
+                group = Group(group_emails[:5])
                 formed_groups.append(group)
 
                 # fix databases
-                print(group_emails)
                 group_collection.insert({'emails': group_emails}) # TODO: grab restaurant time preference
-                stats = being_matched_collection.remove({'email': {'$in': group_emails}})
-                print(stats)
-                stats =users_collection.update({'email': {'$in': group_emails}}, {'$set': {'status': "matched"}})                                
-                print(stats)
-                
+                being_matched_collection.remove({'email': {'$in': group_emails}})
+                users_collection.update({'email': {'$in': group_emails}}, {'$set': {'status': "matched"}})
+
     return formed_groups
         
 
