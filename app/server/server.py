@@ -181,7 +181,7 @@ def match():
     dateFormatted = datetime.datetime.fromtimestamp(float(current_user.time_pref) - 1800)
 
     # send current_user's email and formatted time to matching.html
-    return render_template("matching.html", email=current_user.email, time=dateFormatted.strftime('%I:%M %p'))
+    return render_template("matching.html", time=dateFormatted.strftime('%I:%M %p'))
 
 
 if __name__ == "__main__":
