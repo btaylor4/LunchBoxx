@@ -1,31 +1,33 @@
+html {
+	background-color: #fafafa;
+}
+
 .color-pallate {
-  color: #f8b195;
-  color: #f67280;
-  color: #c06c86;
-  color: #6c5b7b;
-  color: #355c7d;
+	color: #f8b195;
+	color: #f67280;
+	color: #c06c86;
+	color: #6c5b7b;
+	color: #355c7d;
 }
 
 .jumbotron {
-  height: 100vh;
+	height: 100vh;
 }
 
 .vertical-center {
-  display: flex;
-  align-items: center;
+	display: flex;
+	align-items: center;
 }
 
 header {
-  padding: 50px 0 50px;
-  background-image: url("../img/background2.jpg");
-  background-size: cover;
-  text-shadow: 0px 0px 10px #333333;
-
+	padding: 50px 0 50px;
+	background-image: url('../img/background2.jpg');
+	background-size: cover;
+	text-shadow: 0px 0px 10px #333333;
 }
 
-
 section {
-  padding: 150px 0;
+	padding: 150px 0;
 }
 
 .container {
@@ -33,14 +35,13 @@ section {
 	padding: 0;
 }
 
-
 .row {
-	background-color: #FAFAFA;
+	background-color: #fafafa;
 	height: 100%;
 	padding-left: 15px;
 	padding-right: 15px;
 }
 
-html {
-	background-color: #FAFAFA;
+.item {
+	padding-left: 0px;
 }

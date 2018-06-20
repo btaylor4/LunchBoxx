@@ -1,0 +1,17 @@
+<div class="panel panel-default">
+      <div class="panel-heading">You have been matched!</div>
+      <div class="panel-body">
+
+		  <p> You'll be getting lunch with
+			  {% for person in user_group["emails"] %}
+			  	{% if person is not none %}
+			  		{{person.first_name}} {{person.last_name}} ({{person.email}}),
+				{%endif%}
+
+			  {% endfor %}
+	  	</p>
+
+		<p> You will be eating at {{user_group["restaurant"]}} at {{user_group["time"]}}. Enjoy your lunch! </p>
+
+		</div>
+</div>

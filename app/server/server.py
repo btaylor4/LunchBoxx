@@ -132,7 +132,8 @@ def register():
                 return render_template('create-profile.html', email=email, password=password, error='First name can not be empty.', interests=getInterests(), foods=getFoods())
             elif(user.last_name == ''):
                 return render_template('create-profile.html', email=email, password=password, error='Last name can not be empty.', interests=getInterests(), foods=getFoods())
-            elif(user.addr == '' or not getLatLong(user.addr)):  # TODO: see if address exits (google maps)
+            # TODO: see if address exits (google maps)
+            elif(user.addr == '' or not getLatLong(user.addr)):
                 return render_template('create-profile.html', email=email, password=password, error='Address is invalid.', interests=getInterests(), foods=getFoods())
 
             # preferences
@@ -140,10 +141,10 @@ def register():
                 user.interest_prefs = form.getlist('interests')
             if('food' in form):
                 user.food_prefs = form.getlist('food')
-    
+
             lat, long = getLatLong(user.addr)
             update = {'email': form['email'], 'password': form['password'], 'first_name': user.first_name, 'last_name': user.last_name, 'time_pref': user.time_pref, 'addr': user.addr,
-                      'interest_prefs': user.interest_prefs, 'food_prefs': user.food_prefs, 'lat': lat, 'long':long, 'status': "not_matched"}
+                      'interest_prefs': user.interest_prefs, 'food_prefs': user.food_prefs, 'lat': lat, 'long': long, 'status': "not_matched"}
 
             # find and update user
             mongo.db.users.insert(update)
@@ -167,7 +168,7 @@ def login():
         if requested_user:
             if check_password_hash(requested_user["password"], password):
                 user = User(email=request.form['email'])
-                login_user(user)
+                login_user(user, force=True)
                 return redirect(url_for('user_portal'))
         return render_template('login.html', error='Incorrect username or password.')
 
@@ -236,7 +237,32 @@ def index():  # TODO: Check if user is logged in
 @login_required
 def user_portal():
 
-    return render_template("user-portal.html", status=current_user.status, user=getUserDict())
+    user_group = {}
+
+    if (current_user.status == 'matched'):
+        all_groups = mongo.db.groups.find({});
+        all_groups = list(all_groups)
+
+        for group in all_groups:
+            if current_user.email in group['emails']:
+                user_group["emails"] = group['emails']
+                user_group["restaurant"] = group['restaurant']
+                user_group["time"] = group["time"]
+
+                time = datetime.utcfromtimestamp(user_group["time"])
+                user_group["time"] = time.strftime("%I:%M %p")
+
+        print("The other user's emails are: ", user_group["emails"])
+
+        profiles = []
+        for email in user_group["emails"]:
+            profiles.append(mongo.db.users.find_one({"email": email}))
+
+        user_group["emails"] = profiles
+
+        print(user_group)
+
+    return render_template("user-portal.html", status=current_user.status, user=getUserDict(), user_group=user_group)
 
 
 def getUserDict():
@@ -251,6 +277,8 @@ def getUserDict():
 
     del u['Password']
     del u['Status']
+    del u['Lat']
+    del u['Long']
 
     time = datetime.utcfromtimestamp(u['Time Pref'])
     u['Time Pref'] = time.strftime("%I:%M %p")
