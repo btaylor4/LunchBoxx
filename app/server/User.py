@@ -30,5 +30,5 @@ class User(object):
         # self.interest_prefs = db_user['interest_prefs']
         self.food_prefs = db_user['food_prefs']
         self.time_pref = db_user['time_pref']
-        self.status = db_user['match_status']
+        self.status = db_user['status']
         return self

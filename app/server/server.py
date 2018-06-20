@@ -196,8 +196,9 @@ def index():  # TODO: Check if user is logged in
 
 
 @app.route("/user-portal")
+@login_required
 def user_portal():
-    return render_template("user-portal.html")
+    return render_template("user-portal.html", status=current_user.email)
 
 
 @app.route("/matching")
