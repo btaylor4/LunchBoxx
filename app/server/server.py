@@ -40,13 +40,13 @@ def load_user(email):
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        
+
         # routing from signup
         if(request.form['nextButton'] == 'create-profile'):
             email = request.form['email']
             password = request.form['password']
-            verify_password = request.form['verify-password'] 
-            
+            verify_password = request.form['verify-password']
+
             hashed_password = generate_password_hash(password, method='sha256')
             # searches the data base for the username chosen
             requested_user = mongo.db.users.find_one({'email': email})
@@ -63,12 +63,12 @@ def register():
                     return render_template('sign-up.html', error='Passwords do not match.')
             else:
                 return render_template('sign-up.html', error='Username has already been taken.')
-        
+
         # routing from create profile page
         elif(request.form['nextButton'] == 'done'):
             # create the user
             form = request.form
-            
+
             email = form['email']
             password = form['password']
 
@@ -89,10 +89,8 @@ def register():
 
             print('tempTime:', tempTime)
 
-            timeDiff = (tempTime-datetime.datetime(1970,1,1)).total_seconds() 
+            timeDiff = (tempTime-datetime.datetime(1970,1,1)).total_seconds()
 
-            print((tempTime-datetime.datetime(1970,1,1)))
-            
             print('timeDiff:',timeDiff)
 
             user.first_name = form['firstName']
@@ -120,8 +118,8 @@ def register():
 
             # redirect to the login page
             return redirect(url_for('login'))
-            
-    
+
+
     return render_template('sign-up.html', hidden='hidden')
 
 
@@ -143,14 +141,19 @@ def login():
     return render_template('login.html', hidden='hidden')
 
 @app.route('/preferences', methods=['GET', 'POST'])
-@login_required    
+@login_required
 def preferences():
     if request.method == 'POST':
         food_preferences = request.form.getlist('food')
         mongo.db.being_matched.insert({'email': current_user.email, 'preferences': food_preferences, 'time_pref': current_user.time_pref })
-        return redirect(url_for('matching', time_pref='1529458560'))
+        now = datetime.datetime.utcnow()
 
-        # TODO Return template for 'YOU'RE BEING MATCHED'
+        tempTimeString = now.strftime("%d%m%Y") + " " + request.form['lunch-time']
+        tempTime = datetime.datetime.strptime(tempTimeString, "%d%m%Y %I:%M %p")
+        timeDiff = (tempTime-datetime.datetime(1970,1,1)).total_seconds()
+
+        return redirect(url_for('matching', time_pref=round(timeDiff)))
+
 
     time = datetime.datetime.utcfromtimestamp(current_user.time_pref)
     time_string = time.strftime("%I:%M %p")
@@ -159,10 +162,6 @@ def preferences():
     print("time_string2", time_string2)
     return render_template('preferences.html', preference_list=current_user.food_prefs, time_pref=time_string2)
 
-
-@app.route('/home')
-def home():
-    return render_template('home.html')
 
 @app.route('/places', methods=['GET', 'POST'])
 def place():
