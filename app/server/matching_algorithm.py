@@ -19,7 +19,7 @@ def form_groups(users_collection, being_matched_collection, group_collection):
         group_collection.insert({'emails': group_emails})
         print(group_emails)
         stats = being_matched_collection.remove({'email':{'$in':group_emails}})
-        users_collection.update({'email':{'$in':group_emails}}, {'status': "matched"})
+        users_collection.update({'email':{'$in':group_emails}}, {'$set': {'status': "matched"}})
         # TODO sets user status
         print(stats)
         return group
