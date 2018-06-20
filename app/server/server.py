@@ -12,6 +12,7 @@ from User import User
 import places
 from datetime import datetime
 from time import time
+from datetime import timedelta, datetime
 
 import json
 from matching_algorithm import form_groups
@@ -103,9 +104,22 @@ def register():
 			tempTime = datetime.strptime(
 				tempTimeString, "%d%m%Y %I:%M %p")
 
+			
 			print('tempTime:', tempTime)
 
-			timeDiff = (tempTime-datetime(1970, 1, 1)).total_seconds()
+			time_diff_datetime = (tempTime-datetime(1970, 1, 1))
+			timeDiff = time_diff_datetime.total_seconds()
+			# If within an hour, sign them up for lunch the next day
+			present = datetime.now()
+
+			print('Timediff float', timeDiff)
+			print('Timediff int', int(timeDiff))
+			if present > (datetime.utcfromtimestamp(timeDiff) - timedelta(hours=1)):
+				timeDiff = timeDiff + 86400
+				print('New timediff', timeDiff)
+
+
+			timeDiff = time_diff_datetime.total_seconds()
 
 			print('timeDiff:', timeDiff)
 
@@ -171,7 +185,7 @@ def preferences():
 		timeDiff = (tempTime-datetime(1970,1,1)).total_seconds()
 
 
-		mongo.db.being_matched.insert({'email': current_user.email, 'preferences': request.form.getlist('food'), 'time_pref': timeDiff })
+		mongo.db.being_matched.insert({'email': current_user.email, 'first_name': current_user.first_name, 'last_name': current_user.last_name, 'addr': current_user.addr, 'interest_prefs': current_user.interest_prefs, 'food_prefs': request.form.getlist('food'), 'time_pref': timeDiff })
 		mongo.db.users.update({'email': current_user.email}, {'$set': {'status': "being_matched"}})
 		value = form_groups(mongo.db.users, mongo.db.being_matched, mongo.db.groups)
 		print(value)
