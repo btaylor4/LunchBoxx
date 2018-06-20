@@ -33,60 +33,50 @@
         <div class="row">
             <div class="col-md-6 col-md-offset-3 row-md-4 row-md-offset-4">
                 <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <strong>Find your matches</strong>
-                    </div>
                     <div class="panel-body">
                         <form class="form-horizontal" role="form" method="POST">
-                            <!-- Form Name -->
-                            <div class="form-group section">
-                                <label for="lunch-time" class="">Lunch Time</label>
-                                <input name="lunch-time" class="" placeholder="00:00" />
-                            </div>
-
                             <!-- Preferences -->
                             <div class="form-group">
                                 <label for="default-preferences" class="preference-label">Preferences</label>
+                                <div class="row">
+                                    <div class="col-md-4 preference">
+                                            <label for="lunch-time" class="">Lunch Time</label>
+                                            <select name="lunch-time" class="ui fluid dropdown" prefilled={{preference_list}}>
+                                                <option value="10:00 AM">10:00 AM</option>
+                                                <option value="10:30 AM">10:30 AM</option>
+                                                <option value="11:00 AM">11:00 AM</option>
+                                                <option value="11:30 AM">11:30 AM</option>
+                                                <option value="12:00 PM">12:00 PM</option>
+                                                <option value="12:30 PM">12:30 PM</option>
+                                                <option value="1:00 PM">1:00 PM</option>
+                                                <option value="1:30 PM">1:30 PM</option>
+                                                <option value="2:00 PM">2:00 PM</option>
+                                            </select>
+                                    </div>
+                                </div>
                                 <!-- Food -->
-                                <div class="ui fluid dropdown selection multiple" tabindex="0">
-                                    <select name="food" multiple>
-                                        <option value="italian">Italian</option>
-                                        <option value="mexican">Mexican</option>
-                                        <option value="spanish">Spanish</option>
-                                        <option value="fast-food">Fast Food</option>
-                                        <option value="bbq">BBQ</option>
-                                        <option value="japaneese">Korean</option>
-                                        <option value="vegitarian">vegitarian</option>
-                                        <option value="backed-goods">Baked Goods</option>
-                                        <option value="brazilian">Brazilian</option>
-                                        <option value="korean">Korean</option>
-                                        <option value="greek">Greek</option>
-                                        <option value="cuban">Cuban</option>
-                                        <option value="indian">Indian</option>
-                                        <option value="caribean">Caribean</option>
-                                        <option value="latin">Latin</option>
-                                        <option value="argintinian">Argintinian</option>
-                                        <option value="breakfast">Breakfast</option>
-                                    </select>
-                                    <div class="default text">Food preferences</div>
-                                    <div class="menu" tabindex="-1">
-                                        <div class="item" data-value="italian">Italian</div>
-                                        <div class="item" data-value="mexican">Mexican</div>
-                                        <div class="item" data-value="spanish">Spanish</div>
-                                        <div class="item" data-value="fast-food">Fast Food</div>
-                                        <div class="item" data-value="bbq">BBQ</div>
-                                        <div class="item" data-value="japaneese">Korean</div>
-                                        <div class="item" data-value="vegitarian">vegitarian</div>
-                                        <div class="item" data-value="backed-goods">Baked Goods</div>
-                                        <div class="item" data-value="brazilian">Brazilian</div>
-                                        <div class="item" data-value="korean">Korean</div>
-                                        <div class="item" data-value="greek">Greek</div>
-                                        <div class="item" data-value="cuban">Cuban</div>
-                                        <div class="item" data-value="indian">Indian</div>
-                                        <div class="item" data-value="caribean">Caribean</div>
-                                        <div class="item" data-value="latin">Latin</div>
-                                        <div class="item" data-value="argintinian">Argintinian</div>
-                                        <div class="item" data-value="breakfast">Breakfast</div>
+                                <div class="row">
+                                    <div class="col-12 preference">
+                                        <label for="food">Food</label>
+                                        <select name="food" multiple class="ui fluid dropdown">
+                                            <option value="italian">Italian</option>
+                                            <option value="mexican">Mexican</option>
+                                            <option value="spanish">Spanish</option>
+                                            <option value="fast-food">Fast Food</option>
+                                            <option value="bbq">BBQ</option>
+                                            <option value="japaneese">Korean</option>
+                                            <option value="vegitarian">vegitarian</option>
+                                            <option value="backed-goods">Baked Goods</option>
+                                            <option value="brazilian">Brazilian</option>
+                                            <option value="korean">Korean</option>
+                                            <option value="greek">Greek</option>
+                                            <option value="cuban">Cuban</option>
+                                            <option value="indian">Indian</option>
+                                            <option value="caribean">Caribean</option>
+                                            <option value="latin">Latin</option>
+                                            <option value="argintinian">Argintinian</option>
+                                            <option value="breakfast">Breakfast</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -101,7 +91,8 @@
     </div>
 
     <script>
-        $(".ui.dropdown").dropdown();
+        console.log({{preference_list}})
+        $(".ui.dropdown").dropdown('set selected', "italian");
     </script>
     <script src="{{ url_for('static',filename='dist/bundle.js') }}" type="text/javascript"></script>
 </body>

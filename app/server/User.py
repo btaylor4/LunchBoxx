@@ -22,12 +22,12 @@ class User(object):
         return self.email
 
     def db_user(self, db_user):
-        print('db_user:', db_user)
+        print('db_user', db_user)
         # self.addr = db_user['addr']
         self.email = db_user['email']
         # self.first_name = db_user['first_name']
         # self.last_name = db_user['last_name']
         # self.interest_prefs = db_user['interest_prefs']
-        # self.food_prefs = db_user['food_prefs']
+        self.food_prefs = db_user['food_prefs']
         self.time_pref = db_user['time_pref']
         return self
