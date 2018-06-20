@@ -7,10 +7,10 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>LunchBoxx</title>
+	<title>LunchBoxx</title>
 
-    <!-- Favicon -->
-    <link rel="shortcut icon" type="image/png" href="{{ url_for('static',filename='img/favicon.ico') }}" />
+	<!-- Favicon -->
+	<link rel="shortcut icon" type="image/png" href="{{ url_for('static',filename='img/favicon.ico') }}" />
 
 	<!-- Bootstrap Core CSS -->
 	<link href="{{ url_for('static',filename='css/bootstrap.min.css') }}" rel="stylesheet">
@@ -47,8 +47,8 @@
 							<!-- Form Name -->
 							<div class="form-group section">
 								<label for="full-name" class="col-md-2">Name</label>
-								<input name="firstName" class="col-md-5" placeholder="first name" />
-								<input name="lastName" class="col-md-5" placeholder="last name" />
+								<input name="firstName" class="col-md-5" placeholder="First Name" />
+								<input name="lastName" class="col-md-5" placeholder="Last Name" />
 							</div>
 
 							<!-- Preferences -->
@@ -105,36 +105,36 @@
 
 								<!-- Time -->
 								<div class="col-md-4 preference">
-                                    <label for="lunch-time" class="">Lunch Time</label>
-                                    <select name="lunch-time" class="ui fluid dropdown">
-                                        <option value="10:00 AM">
-                                                10:00 AM
-                                        </option>
-                                        <option value="10:30 AM">
-                                                10:30 AM
-                                        </option>
-                                        <option value="11:00 AM">
-                                                11:00 AM
-                                        </option>
-                                        <option value="11:30 AM">
-                                                11:30 AM
-                                        </option>
-                                        <option value="12:00 PM">
-                                                12:00 PM
-                                        </option>
-                                        <option value="12:30 PM">
-                                                12:30 PM
-                                        </option>
-                                        <option value="1:00 PM">
-                                                1:00 PM
-                                        </option>
-                                        <option value="1:30 PM">
-                                                1:30 PM
-                                        </option>
-                                        <option value="2:00 PM">
-                                                2:00 PM
-                                        </option>
-                                    </select>
+									<label for="lunch-time" class="">Lunch Time</label>
+									<select name="lunch-time" class="ui fluid dropdown">
+										<option value="10:00 AM">
+											10:00 AM
+										</option>
+										<option value="10:30 AM">
+											10:30 AM
+										</option>
+										<option value="11:00 AM">
+											11:00 AM
+										</option>
+										<option value="11:30 AM">
+											11:30 AM
+										</option>
+										<option value="12:00 PM">
+											12:00 PM
+										</option>
+										<option value="12:30 PM">
+											12:30 PM
+										</option>
+										<option value="1:00 PM">
+											1:00 PM
+										</option>
+										<option value="1:30 PM">
+											1:30 PM
+										</option>
+										<option value="2:00 PM">
+											2:00 PM
+										</option>
+									</select>
 								</div>
 							</div>
 
@@ -146,14 +146,17 @@
 									<input name="address" class="form-control" placeholder="2000 Ultimate Way, Weston, FL" />
 								</div>
 							</div>
-							<div class="button-container">
-								<button type="submit" name="nextButton" value="done" class="next-button">Create Profile</button>
+							<div class="form-group last">
+								<div class="col-sm-offset-3 col-sm-9">
+									<button type="submit" name="nextButton" value="back" class="btn btn-success btn-sm">Back</button>
+									<button type="submit" name="nextButton" value="done" class="btn btn-success btn-sm">Create Profile</button>
+								</div>
 							</div>
 						</form>
-                    </div>
-                    <div class="panel-footer alert alert-danger {{hidden}}" role="alert">
-                        {{error}}
-                    </div>
+					</div>
+					<div class="panel-footer alert alert-danger {{hidden}}" role="alert">
+						{{error}}
+					</div>
 				</div>
 			</div>
 		</div>

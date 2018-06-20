@@ -29,3 +29,24 @@ def getNearbyPlaces(food_type, coords, radius=5000):
 		topRestaurantName = results[0]['name']
 
 	return topRestaurantName
+
+def getLatLong(address):
+
+	print("getting coords")
+	print(address)
+
+	url = ('{url}?'
+	'address={address}'
+	'&key={key}'
+	.format(url= config.LOCATION_URL, address=address, key=config.MAPS_API_KEY))
+
+	res = requests.get(url)
+	res = res.json()
+	results = res['results']
+
+	if len(results) > 0:
+		lat = results[0]['geometry']['location']['lat']
+		long = results[0]['geometry']['location']['lng']
+		return (lat, long)
+	else:
+		return None

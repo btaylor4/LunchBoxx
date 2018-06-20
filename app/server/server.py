@@ -57,7 +57,8 @@ def register():
                 if password == verify_password:
                     if(len(password) > 5):
                         # makes a new user inside data base if non already exits
-                        mongo.db.users.insert({'email': email, 'password': hashed_password})
+                        mongo.db.users.insert(
+                            {'email': email, 'password': hashed_password})
                         return render_template('create-profile.html', email=email, password=password, hidden='hidden')
                     else:
                         return render_template('sign-up.html', error='Passwords must be at least 6 characters.')
@@ -76,7 +77,6 @@ def register():
 
             user = User(email)
 
-
             print('form[\'lunch-time\']:', form['lunch-time'])
 
             now = datetime.datetime.utcnow()
@@ -87,13 +87,14 @@ def register():
 
             print('tempTimeString:', tempTimeString)
 
-            tempTime = datetime.datetime.strptime(tempTimeString, "%d%m%Y %I:%M %p")
+            tempTime = datetime.datetime.strptime(
+                tempTimeString, "%d%m%Y %I:%M %p")
 
             print('tempTime:', tempTime)
 
-            timeDiff = (tempTime-datetime.datetime(1970,1,1)).total_seconds()
+            timeDiff = (tempTime-datetime.datetime(1970, 1, 1)).total_seconds()
 
-            print('timeDiff:',timeDiff)
+            print('timeDiff:', timeDiff)
 
             user.first_name = form['firstName']
             user.last_name = form['lastName']
@@ -105,7 +106,7 @@ def register():
                 return render_template('create-profile.html', email=email, password=password, error='First name can not be empty.')
             elif(user.last_name == ''):
                 return render_template('create-profile.html', email=email, password=password, error='Last name can not be empty.')
-            elif(user.addr == ''): # TODO: see if address exits (google maps)
+            elif(user.addr == ''):  # TODO: see if address exits (google maps)
                 return render_template('create-profile.html', email=email, password=password, error='Address is invalid.')
 
             # preferences
@@ -113,7 +114,8 @@ def register():
                 user.interest_prefs = form.getlist('interests')
             if('food' in form):
                 user.food_prefs = form.getlist('food')
-            update = {'first_name':user.first_name, 'last_name':user.last_name, 'time_pref':user.time_pref, 'addr':user.addr, 'interest_prefs':user.interest_prefs, 'food_prefs':user.food_prefs}
+            update = {'first_name': user.first_name, 'last_name': user.last_name, 'time_pref': user.time_pref, 'addr': user.addr,
+                      'interest_prefs': user.interest_prefs, 'food_prefs': user.food_prefs, 'match_status': "not matched"}
 
             # find and update user
             mongo.db.users.update_one({'email': user.email}, {'$set': update})
@@ -121,7 +123,8 @@ def register():
 
             # redirect to the login page
             return redirect(url_for('login'))
-
+        elif(request.form['nextButton'] == 'back'):
+            return redirect(url_for('register'))
 
     return render_template('sign-up.html', hidden='hidden')
 
@@ -143,6 +146,7 @@ def login():
 
     return render_template('login.html', hidden='hidden')
 
+
 @app.route('/preferences', methods=['GET', 'POST'])
 @login_required
 def preferences():
@@ -153,9 +157,10 @@ def preferences():
         tempTime = datetime.datetime.strptime(tempTimeString, "%d%m%Y %I:%M %p")
         timeDiff = (tempTime-datetime.datetime(1970,1,1)).total_seconds()
 
+        
         mongo.db.being_matched.insert({'email': current_user.email, 'preferences': request.form.getlist('food'), 'time_pref': timeDiff })
-
-        value = form_groups(mongo.db.being_matched, mongo.db.groups)
+        mongo.db.users.update({'email': current_user.email}, {'match_status': "being_matched"})
+        value = form_groups(mongo.db.users, mongo.db.being_matched, mongo.db.groups)
         print(value)
         if(value):
             # Return to bryan's page
@@ -163,7 +168,6 @@ def preferences():
             pass
         else:
             return redirect(url_for('matching', time_pref=round(timeDiff)))
-
 
     time = datetime.datetime.utcfromtimestamp(current_user.time_pref)
     time_string = time.strftime("%I:%M %p")
@@ -176,11 +180,14 @@ def preferences():
 @app.route('/places', methods=['GET', 'POST'])
 def place():
 	print("I AM IN PLACE YO")
-	food_type = 'italian'
-	coord = (26.0895906,-80.3669549)
-	resp = places.getNearbyPlaces(food_type, coord)
+	# food_type = 'italian'
+	# coord = (26.0895906,-80.3669549)
+	# resp = places.getNearbyPlaces(food_type, coord)
+	# print("The top restaurant is: ", resp)
 
-	print("The top restaurant is: ", resp)
+	location = 'I AM NOT REAL YO'
+	resp = places.getLatLong(location)
+	print("The lat and long is:", resp)
 	return
 
 @app.route("/logout")
@@ -190,7 +197,7 @@ def logout():
 
 
 @app.route("/")
-def index(): # TODO: Check if user is logged in
+def index():  # TODO: Check if user is logged in
     return redirect(url_for("login"))
 
 
@@ -204,7 +211,8 @@ def matching():
     print('current_user.time_pref:', current_user.time_pref)
     print('time_pref:', request.args['time_pref'])
     # produce datetime obj from seconds-since-epoch time_pref on current_user (add subtract 30 minutes to get notification time)
-    dateFormatted = datetime.datetime.utcfromtimestamp(float(request.args['time_pref']) - 1800.0)
+    dateFormatted = datetime.datetime.utcfromtimestamp(
+        float(request.args['time_pref']) - 1800.0)
 
     # send current_user's email and formatted time to matching.html
     return render_template("matching.html", time=(dateFormatted.strftime('%I:%M %p')))
