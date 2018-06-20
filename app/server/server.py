@@ -237,32 +237,32 @@ def index():  # TODO: Check if user is logged in
 @login_required
 def user_portal():
 
-	user_group = {}
+    user_group = {}
 
-	if (current_user.status == 'matched'):
-		all_groups = mongo.db.groups.find({});
-		all_groups = list(all_groups)
+    if (current_user.status == 'matched'):
+        all_groups = mongo.db.groups.find({});
+        all_groups = list(all_groups)
 
-		for group in all_groups:
-			if current_user.email in group['emails']:
-				user_group["emails"] = group['emails']
-				user_group["restaurant"] = group['restaurant']
-				user_group["time"] = group["time"]
+        for group in all_groups:
+            if current_user.email in group['emails']:
+                user_group["emails"] = group['emails']
+                user_group["restaurant"] = group['restaurant']
+                user_group["time"] = group["time"]
 
-				time = datetime.utcfromtimestamp(user_group["time"])
-				user_group["time"] = time.strftime("%I:%M %p")
+                time = datetime.utcfromtimestamp(user_group["time"])
+                user_group["time"] = time.strftime("%I:%M %p")
 
-	print("The other user's emails are: ", user_group["emails"])
+        print("The other user's emails are: ", user_group["emails"])
 
-	profiles = []
-	for email in user_group["emails"]:
-		profiles.append(mongo.db.users.find_one({"email": email}))
+        profiles = []
+        for email in user_group["emails"]:
+            profiles.append(mongo.db.users.find_one({"email": email}))
 
-	user_group["emails"] = profiles
+        user_group["emails"] = profiles
 
-	print(user_group)
+        print(user_group)
 
-	return render_template("user-portal.html", status=current_user.status, user=getUserDict(), user_group=user_group)
+    return render_template("user-portal.html", status=current_user.status, user=getUserDict(), user_group=user_group)
 
 
 def getUserDict():
@@ -277,6 +277,8 @@ def getUserDict():
 
     del u['Password']
     del u['Status']
+    del u['Lat']
+    del u['Long']
 
     time = datetime.utcfromtimestamp(u['Time Pref'])
     u['Time Pref'] = time.strftime("%I:%M %p")
