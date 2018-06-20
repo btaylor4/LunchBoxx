@@ -13,6 +13,8 @@ import places
 import datetime
 from time import time
 
+from matching_algorithm import form_groups
+
 from being_matched import BeingMatched
 
 app = Flask(__name__, static_folder="../static", template_folder="../static")
@@ -116,6 +118,7 @@ def register():
             # find and update user
             mongo.db.users.update_one({'email': user.email}, {'$set': update})
 
+
             # redirect to the login page
             return redirect(url_for('login'))
 
@@ -144,15 +147,22 @@ def login():
 @login_required
 def preferences():
     if request.method == 'POST':
-        food_preferences = request.form.getlist('food')
-        mongo.db.being_matched.insert({'email': current_user.email, 'preferences': food_preferences, 'time_pref': current_user.time_pref })
-        now = datetime.datetime.utcnow()
 
+        now = datetime.datetime.utcnow()
         tempTimeString = now.strftime("%d%m%Y") + " " + request.form['lunch-time']
         tempTime = datetime.datetime.strptime(tempTimeString, "%d%m%Y %I:%M %p")
         timeDiff = (tempTime-datetime.datetime(1970,1,1)).total_seconds()
 
-        return redirect(url_for('matching', time_pref=round(timeDiff)))
+        mongo.db.being_matched.insert({'email': current_user.email, 'preferences': request.form.getlist('food'), 'time_pref': timeDiff })
+
+        value = form_groups(mongo.db.being_matched, mongo.db.groups)
+        print(value)
+        if(value):
+            # Return to bryan's page
+            return "You were matched"
+            pass
+        else:
+            return redirect(url_for('matching', time_pref=round(timeDiff)))
 
 
     time = datetime.datetime.utcfromtimestamp(current_user.time_pref)
