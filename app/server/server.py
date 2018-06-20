@@ -132,7 +132,8 @@ def register():
                 return render_template('create-profile.html', email=email, password=password, error='First name can not be empty.', interests=getInterests(), foods=getFoods())
             elif(user.last_name == ''):
                 return render_template('create-profile.html', email=email, password=password, error='Last name can not be empty.', interests=getInterests(), foods=getFoods())
-            elif(user.addr == '' or not getLatLong(user.addr)):  # TODO: see if address exits (google maps)
+            # TODO: see if address exits (google maps)
+            elif(user.addr == '' or not getLatLong(user.addr)):
                 return render_template('create-profile.html', email=email, password=password, error='Address is invalid.', interests=getInterests(), foods=getFoods())
 
             # preferences
@@ -140,10 +141,10 @@ def register():
                 user.interest_prefs = form.getlist('interests')
             if('food' in form):
                 user.food_prefs = form.getlist('food')
-    
+
             lat, long = getLatLong(user.addr)
             update = {'email': form['email'], 'password': form['password'], 'first_name': user.first_name, 'last_name': user.last_name, 'time_pref': user.time_pref, 'addr': user.addr,
-                      'interest_prefs': user.interest_prefs, 'food_prefs': user.food_prefs, 'lat': lat, 'long':long, 'status': "not_matched"}
+                      'interest_prefs': user.interest_prefs, 'food_prefs': user.food_prefs, 'lat': lat, 'long': long, 'status': "not_matched"}
 
             # find and update user
             mongo.db.users.insert(update)
@@ -167,7 +168,7 @@ def login():
         if requested_user:
             if check_password_hash(requested_user["password"], password):
                 user = User(email=request.form['email'])
-                login_user(user)
+                login_user(user, force=True)
                 return redirect(url_for('user_portal'))
         return render_template('login.html', error='Incorrect username or password.')
 
