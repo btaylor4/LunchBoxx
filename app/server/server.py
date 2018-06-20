@@ -152,11 +152,14 @@ def preferences():
 @app.route('/places', methods=['GET', 'POST'])
 def place():
 	print("I AM IN PLACE YO")
-	food_type = 'italian'
-	coord = (26.0895906,-80.3669549)
-	resp = places.getNearbyPlaces(food_type, coord)
+	# food_type = 'italian'
+	# coord = (26.0895906,-80.3669549)
+	# resp = places.getNearbyPlaces(food_type, coord)
+	# print("The top restaurant is: ", resp)
 
-	print("The top restaurant is: ", resp)
+	location = 'I AM NOT REAL YO'
+	resp = places.getLatLong(location)
+	print("The lat and long is:", resp)
 	return
 
 @app.route("/logout")
