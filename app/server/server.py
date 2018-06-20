@@ -81,11 +81,8 @@ def register():
 
             tempTime = datetime.datetime.strptime(tempTimeString, "%d%m%Y%I:%M %p")
 
-            print("tempTime", tempTime)
-
             timeDiff = (tempTime-datetime.datetime(1970,1,1)).total_seconds() 
-            
-            print('timeDiff:',timeDiff)
+        
 
             # setup the user
             user.password = password
@@ -93,7 +90,6 @@ def register():
             user.first_name = form['firstName']
             user.last_name = form['lastName']
             user.time_pref = round(timeDiff)
-            print('user.time_pref:', user.time_pref)
             user.addr = form['address']
 
             # handle errors
@@ -133,7 +129,6 @@ def login():
             if check_password_hash(requested_user["password"], password):
                 user = User(email=request.form['email'])
                 login_user(user)
-                print('current_user.time_pref:', current_user.time_pref)
                 return redirect(url_for('user_portal'))
         return render_template('login.html', error='Incorrect username or password.')
 
@@ -153,8 +148,6 @@ def preferences():
 
     time_string = time.strftime("%I:%M %p")
 
-    print('current_user.time_pref lol',current_user.time_pref)
-    print('Time_stirng',time_string)
     return render_template('preferences.html', preference_list=current_user.food_prefs, time=time_string)
 
 
