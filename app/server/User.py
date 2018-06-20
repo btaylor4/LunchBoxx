@@ -22,7 +22,6 @@ class User(object):
         return self.email
 
     def db_user(self, db_user):
-        print('db_user', db_user)
         # self.addr = db_user['addr']
         self.email = db_user['email']
         # self.first_name = db_user['first_name']

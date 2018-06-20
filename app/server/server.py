@@ -68,11 +68,14 @@ def register():
             form = request.form
             user = User(form['email'])
 
+
             now = datetime.datetime.now()
 
             tempTimeString = now.strftime("%d%m%Y") + form['lunch-time']
 
             tempTime = datetime.datetime.strptime(tempTimeString, "%d%m%Y%I:%M %p")
+
+            print("tempTime", tempTime)
 
             timeDiff = (tempTime-datetime.datetime(1970,1,1)).total_seconds() 
             
@@ -132,8 +135,15 @@ def preferences():
         mongo.db.being_matched.insert({'email': current_user.email, 'preferences': food_preferences, 'time_pref': current_user.time_pref })
 
         # TODO Return template for 'YOU'RE BEING MATCHED'
-    print("current_user food_prefs", current_user.food_prefs)
-    return render_template('preferences.html', preference_list=current_user.food_prefs)
+
+    time = datetime.datetime.utcfromtimestamp(current_user.time_pref)
+
+
+    time_string = time.strftime("%I:%M %p")
+
+    print('current_user.time_pref lol',current_user.time_pref)
+    print('Time_stirng',time_string)
+    return render_template('preferences.html', preference_list=current_user.food_prefs, time=time_string)
 
 
 @app.route('/home')
