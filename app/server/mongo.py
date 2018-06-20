@@ -1,4 +1,5 @@
 import sys
+import json
 from pymongo import MongoClient
 
 client = MongoClient(
@@ -24,4 +25,14 @@ if __name__ == "__main__":
             client.lunchbox.being_matched.delete_many({})
             print('All data bases have been purged!')
 
-    print('Missing data base paramater')
+    if len(sys.argv) > 1 and sys.argv[1] == 'reset':
+        with open('users.json') as f:
+            data = json.load(f)
+
+        client.lunchbox.users.delete_many({})
+        client.lunchbox.groups.delete_many({})
+        client.lunchbox.being_matched.delete_many({})
+        print('All data bases have been purged!')
+
+        client.lunchbox.users.insert(data)
+        print('Database has been reset')

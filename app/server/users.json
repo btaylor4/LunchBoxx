@@ -1,0 +1,72 @@
+[
+  {
+    "email": "deploy@test.com",
+    "password":
+      "sha256$6myp95aC$4e60713bf23107c290b4e4c788d6e3430b7a6de87e14aaa18cbb9429059322f7",
+    "first_name": "Bryan",
+    "last_name": "Taylor",
+    "time_pref": 1529488800,
+    "addr": "2000 Ultimate Way, Weston Florida 33326",
+    "interest_prefs": ["Aircraft Spotting", "Airsofting", "Amateur Astronomy"],
+    "food_prefs": ["Mexican", "Italian", "American"],
+    "lat": 26.0969179,
+    "long": -80.3843933,
+    "status": "not_matched"
+  },
+  {
+    "email": "deploy@test1.com",
+    "password":
+      "sha256$6myp95aC$4e60713bf23107c290b4e4c788d6e3430b7a6de87e14aaa18cbb9429059322f7",
+    "first_name": "Bryan1",
+    "last_name": "Taylor",
+    "time_pref": 1529488800,
+    "addr": "2000 Ultimate Way, Weston Florida 33326",
+    "interest_prefs": ["Aircraft Spotting", "Airsofting", "Amateur Astronomy"],
+    "food_prefs": ["Mexican", "Italian", "American"],
+    "lat": 26.0969179,
+    "long": -80.3843933,
+    "status": "not_matched"
+  },
+  {
+    "email": "deploy@test2.com",
+    "password":
+      "sha256$6myp95aC$4e60713bf23107c290b4e4c788d6e3430b7a6de87e14aaa18cbb9429059322f7",
+    "first_name": "Bryan2",
+    "last_name": "Taylor",
+    "time_pref": 1529488800,
+    "addr": "2000 Ultimate Way, Weston Florida 33326",
+    "interest_prefs": ["Aircraft Spotting", "Airsofting", "Amateur Astronomy"],
+    "food_prefs": ["Mexican", "Italian", "American"],
+    "lat": 26.0969179,
+    "long": -80.3843933,
+    "status": "not_matched"
+  },
+  {
+    "email": "deploy@test3.com",
+    "password":
+      "sha256$6myp95aC$4e60713bf23107c290b4e4c788d6e3430b7a6de87e14aaa18cbb9429059322f7",
+    "first_name": "Bryan3",
+    "last_name": "Taylor",
+    "time_pref": 1529488800,
+    "addr": "2000 Ultimate Way, Weston Florida 33326",
+    "interest_prefs": ["Aircraft Spotting", "Airsofting", "Amateur Astronomy"],
+    "food_prefs": ["Mexican", "Italian", "American"],
+    "lat": 26.0969179,
+    "long": -80.3843933,
+    "status": "not_matched"
+  },
+  {
+    "email": "deploy@test4.com",
+    "password":
+      "sha256$6myp95aC$4e60713bf23107c290b4e4c788d6e3430b7a6de87e14aaa18cbb9429059322f7",
+    "first_name": "Bryan4",
+    "last_name": "Taylor",
+    "time_pref": 1529488800,
+    "addr": "2000 Ultimate Way, Weston Florida 33326",
+    "interest_prefs": ["Aircraft Spotting", "Airsofting", "Amateur Astronomy"],
+    "food_prefs": ["Mexican", "Italian", "American"],
+    "lat": 26.0969179,
+    "long": -80.3843933,
+    "status": "not_matched"
+  }
+]
