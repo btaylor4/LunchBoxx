@@ -3,6 +3,7 @@ Flask-PyMongo
 Flask-SocketIO
 Flask-Login
 requests
+geopy
 
 # Production
 gunicorn

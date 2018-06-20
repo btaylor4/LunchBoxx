@@ -171,7 +171,7 @@ def preferences():
         timeDiff = (tempTime-datetime(1970,1,1)).total_seconds()
 
 
-        mongo.db.being_matched.insert({'email': current_user.email, 'preferences': request.form.getlist('food'), 'time_pref': timeDiff })
+        mongo.db.being_matched.insert({'email': current_user.email, 'first_name': current_user.first_name, 'last_name': current_user.last_name, 'addr': current_user.addr, 'interest_prefs': current_user.interest_prefs, 'food_prefs': request.form.getlist('food'), 'time_pref': timeDiff })
         mongo.db.users.update({'email': current_user.email}, {'$set': {'status': "being_matched"}})
         value = form_groups(mongo.db.users, mongo.db.being_matched, mongo.db.groups)
         print(value)
