@@ -115,7 +115,7 @@ def register():
             if('food' in form):
                 user.food_prefs = form.getlist('food')
             update = {'first_name': user.first_name, 'last_name': user.last_name, 'time_pref': user.time_pref, 'addr': user.addr,
-                      'interest_prefs': user.interest_prefs, 'food_prefs': user.food_prefs, 'match_status': "not matched"}
+                      'interest_prefs': user.interest_prefs, 'food_prefs': user.food_prefs, 'status': "not matched"}
 
             # find and update user
             mongo.db.users.update_one({'email': user.email}, {'$set': update})
@@ -159,7 +159,7 @@ def preferences():
 
         
         mongo.db.being_matched.insert({'email': current_user.email, 'preferences': request.form.getlist('food'), 'time_pref': timeDiff })
-        mongo.db.users.update({'email': current_user.email}, {'match_status': "being_matched"})
+        mongo.db.users.update({'email': current_user.email}, {'status': "being_matched"})
         value = form_groups(mongo.db.users, mongo.db.being_matched, mongo.db.groups)
         print(value)
         if(value):
