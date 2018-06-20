@@ -74,23 +74,28 @@ def register():
 
             user = User(email)
 
-            now = datetime.datetime.now()
 
-            tempTimeString = now.strftime("%d%m%Y") + form['lunch-time']
+            print('form[\'lunch-time\']:', form['lunch-time'])
 
-            tempTime = datetime.datetime.strptime(tempTimeString, "%d%m%Y%H:%M")
+            now = datetime.datetime.utcnow()
+
+            print('now:', now)
+
+            tempTimeString = now.strftime("%d%m%Y") + " " + form['lunch-time']
+
+            print('tempTimeString:', tempTimeString)
+
+            tempTime = datetime.datetime.strptime(tempTimeString, "%d%m%Y %I:%M %p")
+
+            print('tempTime:', tempTime)
 
             timeDiff = (tempTime-datetime.datetime(1970,1,1)).total_seconds()
 
             print('timeDiff:',timeDiff)
 
-            # setup the user
-            user.password = password
-
             user.first_name = form['firstName']
             user.last_name = form['lastName']
             user.time_pref = round(timeDiff)
-            print('user.time_pref:', user.time_pref)
             user.addr = form['address']
 
             # handle errors
@@ -103,10 +108,9 @@ def register():
 
             # preferences
             if('interests' in form):
-                user.interest_prefs = form['interests']
+                user.interest_prefs = form.getlist('interests')
             if('food' in form):
-                user.food_prefs = form['food']
-
+                user.food_prefs = form.getlist('food')
             update = {'first_name':user.first_name, 'last_name':user.last_name, 'time_pref':user.time_pref, 'addr':user.addr, 'interest_prefs':user.interest_prefs, 'food_prefs':user.food_prefs}
 
             # find and update user
@@ -114,7 +118,8 @@ def register():
 
             # redirect to the login page
             return redirect(url_for('login'))
-
+        elif(request.form['nextButton'] == 'back'):
+            return redirect(url_for('register'))
 
     return render_template('sign-up.html', hidden='hidden')
 
@@ -131,7 +136,6 @@ def login():
             if check_password_hash(requested_user["password"], password):
                 user = User(email=request.form['email'])
                 login_user(user)
-                print('current_user.time_pref:', current_user.time_pref)
                 return redirect(url_for('user_portal'))
         return render_template('login.html', error='Incorrect username or password.')
 
@@ -143,10 +147,21 @@ def preferences():
     if request.method == 'POST':
         food_preferences = request.form.getlist('food')
         mongo.db.being_matched.insert({'email': current_user.email, 'preferences': food_preferences, 'time_pref': current_user.time_pref })
+        now = datetime.datetime.utcnow()
 
-        # TODO Return template for 'YOU'RE BEING MATCHED'
+        tempTimeString = now.strftime("%d%m%Y") + " " + request.form['lunch-time']
+        tempTime = datetime.datetime.strptime(tempTimeString, "%d%m%Y %I:%M %p")
+        timeDiff = (tempTime-datetime.datetime(1970,1,1)).total_seconds()
 
-    return render_template('preferences.html')
+        return redirect(url_for('matching', time_pref=round(timeDiff)))
+
+
+    time = datetime.datetime.utcfromtimestamp(current_user.time_pref)
+    time_string = time.strftime("%I:%M %p")
+    time_string2 = "'" + time_string + "'"
+    print("time_string", time_string)
+    print("time_string2", time_string2)
+    return render_template('preferences.html', preference_list=current_user.food_prefs, time_pref=time_string2)
 
 
 @app.route('/places', methods=['GET', 'POST'])
@@ -178,22 +193,15 @@ def user_portal():
     return render_template("user-portal.html")
 
 
-@app.route("/matched")
-def match():
-    # TODO: remove, testing stuff
+@app.route("/matching")
+def matching():
     print('current_user.time_pref:', current_user.time_pref)
-    print('current_user.email:', current_user.email)
-
-    sec = int(round(time()))
-    print('sec:', sec)
-    dateFormattedTest = datetime.datetime.fromtimestamp(sec-1800)
-    print('dateFormattedTest:', dateFormattedTest)
-
+    print('time_pref:', request.args['time_pref'])
     # produce datetime obj from seconds-since-epoch time_pref on current_user (add subtract 30 minutes to get notification time)
-    dateFormatted = datetime.datetime.fromtimestamp(float(current_user.time_pref) - 1800)
+    dateFormatted = datetime.datetime.utcfromtimestamp(float(request.args['time_pref']) - 1800.0)
 
     # send current_user's email and formatted time to matching.html
-    return render_template("matching.html", email=current_user.email, time=dateFormatted.strftime('%I:%M %p'))
+    return render_template("matching.html", time=(dateFormatted.strftime('%I:%M %p')))
 
 
 if __name__ == "__main__":
