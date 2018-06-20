@@ -52,21 +52,27 @@ def register():
             requested_user = mongo.db.users.find_one({'email': email})
 
             if requested_user is None:
-                
-                if password == verify_password:    
-                    # makes a new user inside data base if non already exits
-                    mongo.db.users.insert({'email': email, 'password': hashed_password})
-                    return render_template('create-profile.html', email=email, password=password)
+                if password == verify_password:
+                    if(len(password) > 5):
+                        # makes a new user inside data base if non already exits
+                        mongo.db.users.insert({'email': email, 'password': hashed_password})
+                        return render_template('create-profile.html', email=email, password=password, hidden='hidden')
+                    else:
+                        return render_template('sign-up.html', error='Passwords must be at least 6 characters.')
                 else:
-                    return 'Passwords do not match'
+                    return render_template('sign-up.html', error='Passwords do not match.')
             else:
-                return 'Username has already been taken'
+                return render_template('sign-up.html', error='Username has already been taken.')
         
         # routing from create profile page
         elif(request.form['nextButton'] == 'done'):
             # create the user
             form = request.form
-            user = User(form['email'])
+            
+            email = form['email']
+            password = form['password']
+
+            user = User(email)
 
 
             now = datetime.datetime.now()
@@ -81,14 +87,23 @@ def register():
             
             print('timeDiff:',timeDiff)
 
-            # password
-            user.password = form['password']
+            # setup the user
+            user.password = password
+
             user.first_name = form['firstName']
             user.last_name = form['lastName']
             user.time_pref = round(timeDiff)
             print('user.time_pref:', user.time_pref)
             user.addr = form['address']
-            
+
+            # handle errors
+            if(user.first_name == ''):
+                return render_template('create-profile.html', email=email, password=password, error='First name can not be empty.')
+            elif(user.last_name == ''):
+                return render_template('create-profile.html', email=email, password=password, error='Last name can not be empty.')
+            elif(user.addr == ''): # TODO: see if address exits (google maps)
+                return render_template('create-profile.html', email=email, password=password, error='Address is invalid.')
+
             # preferences
             if('interests' in form):
                 user.interest_prefs = form.getlist('interests')
@@ -103,7 +118,7 @@ def register():
             return redirect(url_for('login'))
             
     
-    return render_template('sign-up.html')
+    return render_template('sign-up.html', hidden='hidden')
 
 
 # sets up the page for registration
@@ -120,12 +135,9 @@ def login():
                 login_user(user)
                 print('current_user.time_pref:', current_user.time_pref)
                 return redirect(url_for('user_portal'))
-            else:
-                return 'Incorrect credentials.'
-        else:
-            return 'Incorrect email.'
+        return render_template('login.html', error='Incorrect username or password.')
 
-    return render_template('login.html')
+    return render_template('login.html', hidden='hidden')
 
 @app.route('/preferences', methods=['GET', 'POST'])
 @login_required    
