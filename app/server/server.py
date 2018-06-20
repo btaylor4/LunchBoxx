@@ -104,7 +104,7 @@ def register():
 			tempTime = datetime.strptime(
 				tempTimeString, "%d%m%Y %I:%M %p")
 
-			
+
 			print('tempTime:', tempTime)
 
 			time_diff_datetime = (tempTime-datetime(1970, 1, 1))
@@ -232,7 +232,32 @@ def index():  # TODO: Check if user is logged in
 @login_required
 def user_portal():
 
-	return render_template("user-portal.html", status=current_user.status, user=getUserDict())
+	user_group = {}
+
+	if (current_user.status == 'matched'):
+		all_groups = mongo.db.groups.find({});
+		all_groups = list(all_groups)
+
+		for group in all_groups:
+			if current_user.email in group['emails']:
+				user_group["emails"] = group['emails']
+				user_group["restaurant"] = group['restaurant']
+				user_group["time"] = group["time"]
+
+				time = datetime.utcfromtimestamp(user_group["time"])
+				user_group["time"] = time.strftime("%I:%M %p")
+
+	print("The other user's emails are: ", user_group["emails"])
+
+	profiles = []
+	for email in user_group["emails"]:
+		profiles.append(mongo.db.users.find_one({"email": email}))
+
+	user_group["emails"] = profiles
+
+	print(user_group)
+
+	return render_template("user-portal.html", status=current_user.status, user=getUserDict(), user_group=user_group)
 
 
 def getUserDict():
