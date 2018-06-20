@@ -13,6 +13,7 @@ import places
 import datetime
 from time import time
 
+import json
 from matching_algorithm import form_groups
 
 from being_matched import BeingMatched
@@ -38,6 +39,16 @@ def load_user(email):
     new_user.db_user(user)
     return new_user
 
+def getInterests():
+    with open('interests.json') as f:
+        data = json.load(f)
+        return data['interests']
+
+def getFoods():
+    with open('foods.json') as f:
+        data = json.load(f)
+        return data['foods']
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -53,13 +64,15 @@ def register():
             # searches the data base for the username chosen
             requested_user = mongo.db.users.find_one({'email': email})
 
+            print('daddy data: ', getInterests())
+
             if requested_user is None:
                 if password == verify_password:
                     if(len(password) > 5):
                         # makes a new user inside data base if non already exits
                         mongo.db.users.insert(
                             {'email': email, 'password': hashed_password})
-                        return render_template('create-profile.html', email=email, password=password, hidden='hidden')
+                        return render_template('create-profile.html', email=email, password=password, hidden='hidden', interests=getInterests(), foods=getFoods())
                     else:
                         return render_template('sign-up.html', error='Passwords must be at least 6 characters.')
                 else:
@@ -103,11 +116,11 @@ def register():
 
             # handle errors
             if(user.first_name == ''):
-                return render_template('create-profile.html', email=email, password=password, error='First name can not be empty.')
+                return render_template('create-profile.html', email=email, password=password, error='First name can not be empty.', interests=getInterests(), foods=getFoods())
             elif(user.last_name == ''):
-                return render_template('create-profile.html', email=email, password=password, error='Last name can not be empty.')
+                return render_template('create-profile.html', email=email, password=password, error='Last name can not be empty.', interests=getInterests(), foods=getFoods())
             elif(user.addr == ''):  # TODO: see if address exits (google maps)
-                return render_template('create-profile.html', email=email, password=password, error='Address is invalid.')
+                return render_template('create-profile.html', email=email, password=password, error='Address is invalid.', interests=getInterests(), foods=getFoods())
 
             # preferences
             if('interests' in form):
@@ -174,7 +187,7 @@ def preferences():
     time_string2 = "'" + time_string + "'"
     print("time_string", time_string)
     print("time_string2", time_string2)
-    return render_template('preferences.html', preference_list=current_user.food_prefs, time_pref=time_string2)
+    return render_template('preferences.html', preference_list=current_user.food_prefs, time_pref=time_string2, foods=getFoods())
 
 
 @app.route('/places', methods=['GET', 'POST'])
