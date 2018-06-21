@@ -5,6 +5,14 @@ from pymongo import MongoClient
 client = MongoClient(
     'mongodb://slackers:bigwilli3@ds263460.mlab.com:63460/lunchbox')
 
+
+def purge_database():
+    client.lunchbox.users.delete_many({})
+    client.lunchbox.groups.delete_many({})
+    client.lunchbox.being_matched.delete_many({})
+    print('All data bases have been purged!')
+
+
 if __name__ == "__main__":
     if len(sys.argv) > 1 and sys.argv[1] == 'purge':
         if len(sys.argv) > 2 and sys.argv[2] == 'users':
@@ -29,10 +37,17 @@ if __name__ == "__main__":
         with open('users.json') as f:
             data = json.load(f)
 
-        client.lunchbox.users.delete_many({})
-        client.lunchbox.groups.delete_many({})
-        client.lunchbox.being_matched.delete_many({})
-        print('All data bases have been purged!')
+        purge_database()
 
         client.lunchbox.users.insert(data)
         print('Database has been reset')
+
+    if len(sys.argv) > 1 and sys.argv[1] == 'demo':
+        with open('demo.json') as f:
+            data = json.load(f)
+
+        purge_database()
+
+        client.lunchbox.users.insert(data)
+        client.lunchbox.being_matched.insert(data)
+        print('Database has been reset for demo')
